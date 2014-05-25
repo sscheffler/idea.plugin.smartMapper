@@ -35,8 +35,8 @@ public class SmartMapperEditorPopupAction extends AnAction {
     public void actionPerformed(AnActionEvent e) {
         final Project project = e.getProject();
 
-        GlobalSearchScope scope = GlobalSearchScope.allScope(project);
-        PsiClass psiClass = JavaPsiFacade.getInstance(project).findClass("de.BClass", scope);
+//        GlobalSearchScope scope = GlobalSearchScope.allScope(project);
+//        PsiClass psiClass = JavaPsiFacade.getInstance(project).findClass("de.BClass", scope);
 
         PsiFile psiFile = e.getData(LangDataKeys.PSI_FILE);
         Editor editor = e.getData(LangDataKeys.EDITOR);
