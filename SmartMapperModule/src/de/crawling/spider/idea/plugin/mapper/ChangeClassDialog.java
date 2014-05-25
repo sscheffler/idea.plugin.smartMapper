@@ -6,9 +6,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.*;
+import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
 import java.awt.event.*;
+
+import static org.apache.commons.lang.StringUtils.*;
 
 public class ChangeClassDialog extends JDialog {
 
@@ -102,20 +105,32 @@ public class ChangeClassDialog extends JDialog {
     }
 
     private void onOK() {
+
+        String setterClassName = classNameTextField.getText();
+        String setterVarName = variableNameTextField.getText();
+        if(isBlank(setterClassName) || isBlank(setterVarName)){
+            JOptionPane.showMessageDialog(null, "ClassName: " + setterClassName+"\nVariableName: " +setterVarName, "Input Failure" , JOptionPane.INFORMATION_MESSAGE);
+
+            return;
+        }
+
         try {
-            String setterCalls = smartMapper.getMappingMethod(
+            String methodString = smartMapper.getMappingMethod(
                     project,
-                    classNameTextField.getText(),
-                    variableNameTextField.getText(),
+                    setterClassName,
+                    setterVarName,
                     mapperClassTextField.getText(),
                     mapperVariableTextField.getText());
+            if(isNotBlank(methodString)) {
+                updater.updateClassWithCreatingNewMethod(methodString, editorClass);
+            }else{
+                return;
+            }
 
-            updater.updateWithinMethod(setterCalls, editorClass);
         }catch(NullPointerException ne){
             ne.printStackTrace();
-        }finally {
-            dispose();
         }
+        dispose();
     }
 
     private void onCancel() {

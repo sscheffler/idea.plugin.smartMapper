@@ -80,10 +80,10 @@ public class Updater {
 
     /**
      * updates the class over psi structure
-     * @param setterCalls
+     * @param methodString
      * @param psiClass
      */
-    public void updateClassWithCreatingNewMethod(final String setterCalls, final PsiClass psiClass){
+    public void updateClassWithCreatingNewMethod(final String methodString, final PsiClass psiClass){
 
         new WriteCommandAction.Simple(psiClass.getProject(), psiClass.getContainingFile()){
 
@@ -91,7 +91,7 @@ public class Updater {
             protected void run() throws Throwable {
 
                 PsiElementFactory factory = JavaPsiFacade.getElementFactory(psiClass.getProject());
-                PsiMethod map = factory.createMethodFromText(setterCalls, psiClass);
+                PsiMethod map = factory.createMethodFromText(methodString, psiClass);
                 PsiElement method = psiClass.add(map);
                 JavaCodeStyleManager.getInstance(psiClass.getProject()).shortenClassReferences(method);
 

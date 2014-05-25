@@ -6,9 +6,12 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.search.GlobalSearchScope;
+import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
 import java.lang.reflect.Method;
+
+import static org.apache.commons.lang.StringUtils.*;
 
 /**
  * Created by sscheffler on 25.05.14.
@@ -63,24 +66,28 @@ public class SmartMapper {
         PsiClass getterClass = JavaPsiFacade.getInstance(project).findClass(getterCanonicalClassName, scope);
 
         if(null == setterClass){
+            JOptionPane.showMessageDialog(null, "ClassName: " + setterCanonicalClassName+" not known", "Input Failure" , JOptionPane.ERROR_MESSAGE);
             return "";
         }
 
         StringBuilder builder = new StringBuilder();
-        builder.append("public " + setterClassName +" mapTo"+ setterClassName+"(final "+ getterClassName + " " + getterVarName +"){\n");
+
+        getterClassName = (isBlank(getterClassName))?"":"final "+ getterClassName;
+
+        builder.append("public " + setterClassName +" mapTo"+ setterClassName+"("+ getterClassName + " " + getterVarName +"){\n");
         builder.append(setterClassName + " " + setterVarName + " = new " + setterClassName + "();\n");
 
         for (PsiMethod setterMethod : setterClass.getMethods()) {
             if(setterMethod.getName().startsWith("set")){
                 String setterName = setterMethod.getName();
-                String getterName = calculateGetter(getterClass, setterName);
+                String getterName = calculateGetter(getterClass,getterVarName, setterName);
 
-                builder.append(setterVarName + "." + setterName + "("+getterVarName+"."+getterName+");\n");
+                builder.append(setterVarName + "." + setterName + "( "+getterName+" );\n");
 
             }
         }
 
-        builder.append("return "+setterVarName+"\n}");
+        builder.append("return "+setterVarName+";\n}");
         return builder.toString();
     }
 
@@ -112,7 +119,7 @@ public class SmartMapper {
         for (PsiMethod setterMethod : setterClass.getMethods()) {
             if(setterMethod.getName().startsWith("set")){
                 String setterName = setterMethod.getName();
-                String getterName = calculateGetter(getterClass, setterName);
+                String getterName = calculateGetter(getterClass, "",setterName);
 
                 builder.append(varName + "." + setterName + "("+getterName+");\n");
 
@@ -122,7 +129,7 @@ public class SmartMapper {
 
     }
 
-    private String calculateGetter(PsiClass getterClass, String setterName) {
+    private String calculateGetter(final PsiClass getterClass,final String getterVarName, final String setterName) {
         String getterName = "";
 
         String swapSetter = setterName.replaceFirst("set", "");
@@ -140,7 +147,7 @@ public class SmartMapper {
             String swapGetter = getterMethod.getName().replaceFirst("get", "");
 
             if(swapSetter.toLowerCase().equals(swapGetter.toLowerCase())){
-                getterName = getterMethod.getName()+"()";
+                getterName = getterVarName+"."+getterMethod.getName()+"()";
                 break;
             }
 
