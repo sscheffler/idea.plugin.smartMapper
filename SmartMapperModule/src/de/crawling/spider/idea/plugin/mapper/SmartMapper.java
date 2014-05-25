@@ -14,6 +14,12 @@ import java.lang.reflect.Method;
  */
 public class SmartMapper {
 
+    /**
+     * Uses reflection to get setter methods
+     * @param className
+     * @param varName
+     * @return
+     */
     public String getAllSetterMethodsForClass(String className, String varName) {
 
         StringBuilder builder = new StringBuilder();
@@ -39,6 +45,13 @@ public class SmartMapper {
 
     }
 
+    /**
+     * Uses Psi Structure to get setter methods
+     * @param project
+     * @param className
+     * @param varName
+     * @return
+     */
     public String getAllSetterMethodsForClass(Project project, String className, String varName) {
 
         StringBuilder builder = new StringBuilder();
@@ -50,11 +63,11 @@ public class SmartMapper {
             JOptionPane.showMessageDialog(null, "Class '" + className + "' not found!!!", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
-        builder.append(className + " " + varName + " = new " + varName + "();\n");
+        builder.append(className + " " + varName + " = new " + className + "();\n");
 
         for (PsiMethod psiMethod : psiClass.getMethods()) {
             if(psiMethod.getName().startsWith("set")){
-                builder.append(varName + "." + psiMethod.getName() + "(value);\n");
+                builder.append(varName + "." + psiMethod.getName() + "();\n");
             }
         }
         return builder.toString();

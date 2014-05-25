@@ -1,6 +1,11 @@
 package de.crawling.spider.idea.plugin.mapper;
 
+import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.command.CommandProcessor;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 
 import javax.swing.*;
@@ -59,8 +64,31 @@ public class ChangeClassDialog extends JDialog {
     }
 
     private void onOK() {
-        System.out.println(smartMapper.getAllSetterMethodsForClass(project, classNameTextField.getText(), variableNameTextField.getText()));
-//        System.out.println(editor.getDocument().getText());
+        String setterCalls = smartMapper.getAllSetterMethodsForClass(project, classNameTextField.getText(), variableNameTextField.getText());
+        Editor editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
+        Document document = editor.getDocument();
+        int cursorPos = editor.getCaretModel().getOffset();
+
+        final Runnable insertRunner = new Runnable() {
+            @Override
+            public void run() {
+                document.insertString(cursorPos, setterCalls);
+            }
+        };
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                CommandProcessor.getInstance().executeCommand(project, new Runnable() {
+                    @Override
+                    public void run() {
+                        ApplicationManager.getApplication().runWriteAction(insertRunner);
+                    }
+                }, "de.crawling.spider.idea.plugin.mapper.SmartMapper", null);
+            }
+        });
+
+
+
 
         dispose();
     }

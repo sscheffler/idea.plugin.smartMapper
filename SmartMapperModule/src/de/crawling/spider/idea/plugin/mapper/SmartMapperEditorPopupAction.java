@@ -73,24 +73,24 @@ public class SmartMapperEditorPopupAction extends AnAction {
 //        } catch (IOException e1) {
 //            return;
 //        }
-        final Runnable readRunner = new Runnable() {
-            @Override
-            public void run() {
-//                String s = getAllSetterMethodsForClass(String.class);
-//                document.insertString(offset, s);
-            }
-        };
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                CommandProcessor.getInstance().executeCommand(project, new Runnable() {
-                    @Override
-                    public void run() {
-                        ApplicationManager.getApplication().runWriteAction(readRunner);
-                    }
-                }, "de.crawling.spider.idea.plugin.mapper.SmartMapper", null);
-            }
-        });
+//        final Runnable readRunner = new Runnable() {
+//            @Override
+//            public void run() {
+////                String s = getAllSetterMethodsForClass(String.class);
+////                document.insertString(offset, s);
+//            }
+//        };
+//        ApplicationManager.getApplication().invokeLater(new Runnable() {
+//            @Override
+//            public void run() {
+//                CommandProcessor.getInstance().executeCommand(project, new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        ApplicationManager.getApplication().runWriteAction(readRunner);
+//                    }
+//                }, "de.crawling.spider.idea.plugin.mapper.SmartMapper", null);
+//            }
+//        });
     }
 
     private void startDialog(Project project) {
