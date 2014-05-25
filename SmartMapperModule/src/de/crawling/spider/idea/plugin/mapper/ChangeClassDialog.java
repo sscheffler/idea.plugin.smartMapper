@@ -20,6 +20,7 @@ public class ChangeClassDialog extends JDialog {
 
     private final Project project;
     private final SmartMapper smartMapper = new SmartMapper();
+    private Updater updater;
 
     public ChangeClassDialog(final Project project) {
 
@@ -28,11 +29,8 @@ public class ChangeClassDialog extends JDialog {
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
 
-        if(null == project){
-            throw new IllegalArgumentException("Project was null");
-        }
-
         this.project = project;
+        updater = new Updater(project);
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -47,7 +45,6 @@ public class ChangeClassDialog extends JDialog {
             }
         });
 
-// call onCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -55,7 +52,6 @@ public class ChangeClassDialog extends JDialog {
             }
         });
 
-// call onCancel() on ESCAPE
         contentPane.registerKeyboardAction(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onCancel();
@@ -64,33 +60,14 @@ public class ChangeClassDialog extends JDialog {
     }
 
     private void onOK() {
-        String setterCalls = smartMapper.getAllSetterMethodsForClass(project, classNameTextField.getText(), variableNameTextField.getText());
-        Editor editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
-        Document document = editor.getDocument();
-        int cursorPos = editor.getCaretModel().getOffset();
+        try {
+            String setterCalls = smartMapper.getAllSetterMethodsForClass(project, classNameTextField.getText(), variableNameTextField.getText());
+            updater.updateOnDocument(setterCalls);
+        }catch(NullPointerException ne){
 
-        final Runnable insertRunner = new Runnable() {
-            @Override
-            public void run() {
-                document.insertString(cursorPos, setterCalls);
-            }
-        };
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                CommandProcessor.getInstance().executeCommand(project, new Runnable() {
-                    @Override
-                    public void run() {
-                        ApplicationManager.getApplication().runWriteAction(insertRunner);
-                    }
-                }, "de.crawling.spider.idea.plugin.mapper.SmartMapper", null);
-            }
-        });
-
-
-
-
-        dispose();
+        }finally {
+            dispose();
+        }
     }
 
     private void onCancel() {
