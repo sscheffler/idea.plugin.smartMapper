@@ -43,4 +43,6 @@
       </action>
   </actions>
 
+    <module-components>
+    </module-components>
 </idea-plugin>

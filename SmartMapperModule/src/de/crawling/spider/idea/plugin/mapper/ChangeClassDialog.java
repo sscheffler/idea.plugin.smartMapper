@@ -1,6 +1,7 @@
 package de.crawling.spider.idea.plugin.mapper;
 
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.project.Project;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -12,21 +13,21 @@ public class ChangeClassDialog extends JDialog {
     private JTextField classNameTextField;
     private JTextField variableNameTextField;
 
-    private final Editor editor;
+    private final Project project;
     private final SmartMapper smartMapper = new SmartMapper();
 
-    public ChangeClassDialog(final Editor editor) {
+    public ChangeClassDialog(final Project project) {
 
 
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
 
-        if(null == editor){
-            throw new IllegalArgumentException("Editor was null");
+        if(null == project){
+            throw new IllegalArgumentException("Project was null");
         }
 
-        this.editor = editor;
+        this.project = project;
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -58,8 +59,8 @@ public class ChangeClassDialog extends JDialog {
     }
 
     private void onOK() {
-        System.out.println(smartMapper.getAllSetterMethodsForClass(classNameTextField.getText(), variableNameTextField.getText()));
-        System.out.println(editor.getDocument().getText());
+        System.out.println(smartMapper.getAllSetterMethodsForClass(project, classNameTextField.getText(), variableNameTextField.getText()));
+//        System.out.println(editor.getDocument().getText());
 
         dispose();
     }
