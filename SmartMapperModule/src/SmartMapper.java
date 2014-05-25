@@ -1,22 +1,13 @@
-import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataConstants;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiJavaFile;
-import com.intellij.psi.PsiManager;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import javax.swing.*;
 import java.lang.reflect.Method;
 
 /**
@@ -30,8 +21,9 @@ public class SmartMapper extends AnAction {
         }
 
         Editor editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
+        startDialog(editor);
+
         int offset = editor.getCaretModel().getOffset();
-        System.out.println();
 
 
 
@@ -79,6 +71,17 @@ public class SmartMapper extends AnAction {
                 }, "SmartMapper", null);
             }
         });
+    }
+
+    private void startDialog(Editor editor) {
+
+        try {
+            ChangeClassDialog dialog = new ChangeClassDialog(editor);
+            dialog.pack();
+            dialog.setVisible(true);
+        }catch(IllegalArgumentException e){
+            JOptionPane.showMessageDialog(null, e.getMessage(), "No editor open", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     public String getAllSetterMethodsForClass(Class bla) {

@@ -1,3 +1,5 @@
+import com.intellij.openapi.editor.Editor;
+
 import javax.swing.*;
 import java.awt.event.*;
 
@@ -8,13 +10,24 @@ public class ChangeClassDialog extends JDialog {
     private JTextField classNameTextField;
     private JTextField variableNameTextField;
 
-    public ChangeClassDialog() {
+    private final Editor editor;
+
+    public ChangeClassDialog(final Editor editor) {
+
+
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
 
+        if(null == editor){
+            throw new IllegalArgumentException("Editor was null");
+        }
+
+        this.editor = editor;
+
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+
                 onOK();
             }
         });
@@ -42,7 +55,8 @@ public class ChangeClassDialog extends JDialog {
     }
 
     private void onOK() {
-// add your code here
+        System.out.println(editor.getDocument().getText());
+
         dispose();
     }
 
@@ -51,10 +65,10 @@ public class ChangeClassDialog extends JDialog {
         dispose();
     }
 
-    public static void main(String[] args) {
-        ChangeClassDialog dialog = new ChangeClassDialog();
-        dialog.pack();
-        dialog.setVisible(true);
-        System.exit(0);
-    }
+//    public static void main(String[] args) {
+//        ChangeClassDialog dialog = new ChangeClassDialog();
+//        dialog.pack();
+//        dialog.setVisible(true);
+//        System.exit(0);
+//    }
 }
