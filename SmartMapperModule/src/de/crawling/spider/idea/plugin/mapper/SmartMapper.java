@@ -10,6 +10,7 @@ import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -54,11 +55,12 @@ public class SmartMapper {
     }
 
     public String getMappingMethod(
-            Project project,
-            String setterCanonicalClassName,
-            String setterVarName,
-            String getterCanonicalClassName,
-            String getterVarName) {
+            final Project project,
+            final String setterCanonicalClassName,
+            final String setterVarName,
+            final String getterCanonicalClassName,
+            final String getterVarName,
+            final boolean loadSuperClassMethods) {
 
         String setterClassName = regexUtil.calculateClassName(setterCanonicalClassName);
         String getterClassName = regexUtil.calculateClassName(getterCanonicalClassName);
@@ -82,7 +84,7 @@ public class SmartMapper {
         for (PsiMethod setterMethod : setterClass.getMethods()) {
             if(setterMethod.getName().startsWith("set")){
                 String setterName = setterMethod.getName();
-                String getterName = calculateGetter(getterClass,getterVarName, setterName);
+                String getterName = calculateGetter(getterClass,getterVarName, setterName, loadSuperClassMethods);
 
                 builder.append(setterVarName + "." + setterName + "( "+getterName+" );\n");
 
@@ -93,45 +95,9 @@ public class SmartMapper {
         return builder.toString();
     }
 
-    /**
-     * Uses Psi Structure to get setter methods
-     * @param project
-     * @param setterClassName
-     * @param varName
-     * @return
-     */
-    @Deprecated
-    public String getAllSetterMethodsForClass(Project project, String setterClassName, String varName, String getterClassName) {
-
-        StringBuilder builder = new StringBuilder();
-
-        GlobalSearchScope scope = GlobalSearchScope.allScope(project);
-        PsiClass setterClass = JavaPsiFacade.getInstance(project).findClass(setterClassName, scope);
-        PsiClass getterClass = JavaPsiFacade.getInstance(project).findClass(getterClassName, scope);
 
 
-
-
-        if(null == setterClass){
-            JOptionPane.showMessageDialog(null, "Class '" + setterClassName + "' not found!!!", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-
-        builder.append(setterClassName + " " + varName + " = new " + setterClassName + "();\n");
-
-        for (PsiMethod setterMethod : setterClass.getMethods()) {
-            if(setterMethod.getName().startsWith("set")){
-                String setterName = setterMethod.getName();
-                String getterName = calculateGetter(getterClass, "",setterName);
-
-                builder.append(varName + "." + setterName + "("+getterName+");\n");
-
-            }
-        }
-        return builder.toString();
-
-    }
-
-    private String calculateGetter(final PsiClass getterClass,final String getterVarName, final String setterName) {
+    private String calculateGetter(final PsiClass getterClass,final String getterVarName, final String setterName, final boolean loadSuperClassMethods) {
         String getterName = "";
 
         String swapSetter = setterName.replaceFirst("set", "");
@@ -140,7 +106,8 @@ public class SmartMapper {
             return "";
         }
 
-        List<PsiMethod> methods = Arrays.asList(getterClass.getAllMethods());
+        PsiMethod[] methods = (loadSuperClassMethods)?
+                getterClass.getAllMethods() : getterClass.getMethods();
 
         for(PsiMethod getterMethod : methods){
 

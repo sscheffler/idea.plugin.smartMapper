@@ -121,7 +121,8 @@ public class ChangeClassDialog extends JDialog {
                     setterClassName,
                     setterVarName,
                     mapperClassTextField.getText(),
-                    mapperVariableTextField.getText());
+                    mapperVariableTextField.getText(),
+                    superCheckBox.isSelected());
             if(isNotBlank(methodString)) {
                 updater.updateClassWithCreatingNewMethod(methodString, editorClass);
             }else{
