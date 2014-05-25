@@ -48,22 +48,22 @@ public class SmartMapper {
     /**
      * Uses Psi Structure to get setter methods
      * @param project
-     * @param className
+     * @param setterClassName
      * @param varName
      * @return
      */
-    public String getAllSetterMethodsForClass(Project project, String className, String varName) {
+    public String getAllSetterMethodsForClass(Project project, String setterClassName, String varName, String getterClassName) {
 
         StringBuilder builder = new StringBuilder();
 
         GlobalSearchScope scope = GlobalSearchScope.allScope(project);
-        PsiClass psiClass = JavaPsiFacade.getInstance(project).findClass(className, scope);
+        PsiClass psiClass = JavaPsiFacade.getInstance(project).findClass(setterClassName, scope);
 
         if(null == psiClass){
-            JOptionPane.showMessageDialog(null, "Class '" + className + "' not found!!!", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Class '" + setterClassName + "' not found!!!", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
-        builder.append(className + " " + varName + " = new " + className + "();\n");
+        builder.append(setterClassName + " " + varName + " = new " + setterClassName + "();\n");
 
         for (PsiMethod psiMethod : psiClass.getMethods()) {
             if(psiMethod.getName().startsWith("set")){

@@ -21,9 +21,9 @@ public class ChangeClassDialog extends JDialog {
     private PsiClass editorClass;
 
 
-    public ChangeClassDialog(final Project project, PsiClass editorClass) {
+    public ChangeClassDialog(PsiClass editorClass) {
         this.editorClass = editorClass;
-        this.project = project;
+        this.project = editorClass.getProject();
         updater = new Updater(project);
 
         setContentPane(contentPane);
@@ -63,7 +63,11 @@ public class ChangeClassDialog extends JDialog {
 
     private void onOK() {
         try {
-            String setterCalls = smartMapper.getAllSetterMethodsForClass(project, classNameTextField.getText(), variableNameTextField.getText());
+            String setterCalls = smartMapper.getAllSetterMethodsForClass(
+                    project,
+                    classNameTextField.getText(),
+                    variableNameTextField.getText(),
+                    mapperClassTextField.getText());
             updater.updateOnPsiElement(setterCalls, editorClass);
             dispose();
         }catch(NullPointerException ne){

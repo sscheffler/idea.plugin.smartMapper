@@ -50,13 +50,13 @@ public class SmartMapperEditorPopupAction extends AnAction {
             return;
         }
 
-        startDialog(project, editorClass);
+        startDialog(editorClass);
     }
 
-    private void startDialog(Project project, PsiClass editorClass) {
+    private void startDialog(PsiClass editorClass) {
 
         try {
-            ChangeClassDialog dialog = new ChangeClassDialog(project, editorClass);
+            ChangeClassDialog dialog = new ChangeClassDialog(editorClass);
             dialog.pack();
             dialog.setVisible(true);
         }catch(IllegalArgumentException e){
