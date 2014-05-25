@@ -13,6 +13,7 @@ public class ChangeClassDialog extends JDialog {
     private JButton buttonCancel;
     private JTextField classNameTextField;
     private JTextField variableNameTextField;
+    private JTextField mapperClassTextField;
 
     private final Project project;
     private final SmartMapper smartMapper = new SmartMapper();
