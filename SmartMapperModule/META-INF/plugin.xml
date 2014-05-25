@@ -38,10 +38,7 @@
 
   <actions>
     <!-- Add your actions here -->
-      <action id="smartMapper.test" class="Test" text="Test a first plugin">
-          <add-to-group group-id="ToolsMenu" anchor="first"/>
-      </action>
-      <action id="test" class="SmartMapper" text="SmartMapper" description="maps smart">
+      <action id="smartMapper.Popup" class="de.crawling.spider.idea.plugin.mapper.SmartMapper" text="de.crawling.spider.idea.plugin.mapper.SmartMapper" description="maps smart">
           <add-to-group group-id="EditorPopupMenu" anchor="first"/>
       </action>
   </actions>
