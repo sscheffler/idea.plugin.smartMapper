@@ -39,17 +39,24 @@ public class SmartMapperEditorPopupAction extends AnAction {
         PsiFile psiFile = e.getData(LangDataKeys.PSI_FILE);
         Editor editor = e.getData(LangDataKeys.EDITOR);
 
+        int cursorPostion = editor.getCaretModel().getOffset();
+
+        PsiElement psiElement = psiFile.findElementAt(cursorPostion);
+        PsiClass editorClass = PsiTreeUtil.getParentOfType(psiElement, PsiClass.class);
+
+
+
         if (project == null) {
             return;
         }
 
-        startDialog(project);
+        startDialog(project, editorClass);
     }
 
-    private void startDialog(Project project) {
+    private void startDialog(Project project, PsiClass editorClass) {
 
         try {
-            ChangeClassDialog dialog = new ChangeClassDialog(project);
+            ChangeClassDialog dialog = new ChangeClassDialog(project, editorClass);
             dialog.pack();
             dialog.setVisible(true);
         }catch(IllegalArgumentException e){

@@ -1,12 +1,8 @@
 package de.crawling.spider.idea.plugin.mapper;
 
-import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiFile;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -21,17 +17,22 @@ public class ChangeClassDialog extends JDialog {
     private final Project project;
     private final SmartMapper smartMapper = new SmartMapper();
     private Updater updater;
+    private PsiClass editorClass;
 
-    public ChangeClassDialog(final Project project) {
 
+    public ChangeClassDialog(final Project project, PsiClass editorClass) {
+        this.editorClass = editorClass;
+        this.project = project;
+        updater = new Updater(project);
 
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
+        setActions();
 
-        this.project = project;
-        updater = new Updater(project);
+    }
 
+    private void setActions() {
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
@@ -62,11 +63,10 @@ public class ChangeClassDialog extends JDialog {
     private void onOK() {
         try {
             String setterCalls = smartMapper.getAllSetterMethodsForClass(project, classNameTextField.getText(), variableNameTextField.getText());
-            updater.updateOnDocument(setterCalls);
+            updater.updateOnPsiElement(setterCalls, editorClass);
+            dispose();
         }catch(NullPointerException ne){
 
-        }finally {
-            dispose();
         }
     }
 
