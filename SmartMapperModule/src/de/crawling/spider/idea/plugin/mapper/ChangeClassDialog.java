@@ -13,6 +13,7 @@ public class ChangeClassDialog extends JDialog {
     private JTextField variableNameTextField;
 
     private final Editor editor;
+    private final SmartMapper smartMapper = new SmartMapper();
 
     public ChangeClassDialog(final Editor editor) {
 
@@ -57,6 +58,7 @@ public class ChangeClassDialog extends JDialog {
     }
 
     private void onOK() {
+        System.out.println(smartMapper.getAllSetterMethodsForClass(String.class));
         System.out.println(editor.getDocument().getText());
 
         dispose();
