@@ -25,6 +25,7 @@ public class ChangeClassDialog extends JDialog {
     private JTextField classNameTextField;
     private JTextField variableNameTextField;
     private JTextField mapperClassTextField;
+    private JTextField mapperVariableTextField;
 
     private final Project project;
     private final SmartMapper smartMapper = new SmartMapper();
