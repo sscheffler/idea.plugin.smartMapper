@@ -38,50 +38,47 @@ public class ChangeClassDialog extends JDialog {
         this.project = editorClass.getProject();
         updater = new Updater(project);
 
+        setContentPane(contentPane);
+        setModal(true);
+        getRootPane().setDefaultButton(buttonOK);
+
+        initializeFields(editorClass);
+        setActions();
+    }
+
+    private void initializeFields(PsiClass editorClass) {
+
+        setTitle("Smart Mapper");
         Editor editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
         final int cursorPos = editor.getCaretModel().getOffset();
-        PsiIdentifier element = (PsiIdentifier)editorClass.getContainingFile().findElementAt(cursorPos);
+
+        PsiElement element = editorClass.getContainingFile().findElementAt(cursorPos);
 
         GlobalSearchScope scope = GlobalSearchScope.allScope(project);
 
 
         PsiTypeElement psiJavaCodeReferenceElement = PsiTreeUtil.getParentOfType(element, PsiTypeElement.class);
+        if(null != psiJavaCodeReferenceElement){
 
-        String canonicalText = psiJavaCodeReferenceElement.getType().getCanonicalText();
-        String variableName = "";
-        if(null != canonicalText){
+            String canonicalText = psiJavaCodeReferenceElement.getType().getCanonicalText();
+            String variableName = "";
             PsiClass getterClass = JavaPsiFacade.getInstance(project).findClass(canonicalText, scope);
             if(null != getterClass){
-                calculateVariableName(canonicalText);
+                variableName = calculateVariableName(canonicalText);
+
+
             }else{
                 JOptionPane.showMessageDialog(null, "Class '" + canonicalText + "' not found!!!", "Error", JOptionPane.ERROR_MESSAGE);
             }
 
+            mapperClassTextField.setText(canonicalText);
+            mapperVariableTextField.setText(variableName);
         }
-
-
-
-
-//            Collection<PsiIdentifier> list= PsiTreeUtil.findChildrenOfAnyType(method, PsiIdentifier.class);
-//        PsiElement element1 = element.getContext();
-//        PsiElement element2 = element.getParent();
-
-
-
-
-
-
-        setContentPane(contentPane);
-        setModal(true);
-        getRootPane().setDefaultButton(buttonOK);
-        setActions();
-
-
-
     }
 
-    private void calculateVariableName(String canonicalText) {
-        String variableName;Pattern p = Pattern.compile(EXTRACT_CLASS_NAME_PATTERN);
+    private String calculateVariableName(String canonicalText) {
+        String variableName="";
+        Pattern p = Pattern.compile(EXTRACT_CLASS_NAME_PATTERN);
         Matcher m = p.matcher(canonicalText);
         boolean classNameFound = m.find();
         if(classNameFound){
@@ -93,6 +90,7 @@ public class ChangeClassDialog extends JDialog {
                 variableName = swapCharString + swapRestString;
             }
         }
+        return variableName;
     }
 
     private void setActions() {
