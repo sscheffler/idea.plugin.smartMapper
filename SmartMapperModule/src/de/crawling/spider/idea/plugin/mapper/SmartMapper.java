@@ -10,6 +10,8 @@ import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.apache.commons.lang.StringUtils.*;
 
@@ -138,7 +140,9 @@ public class SmartMapper {
             return "";
         }
 
-        for(PsiMethod getterMethod : getterClass.getMethods()){
+        List<PsiMethod> methods = Arrays.asList(getterClass.getAllMethods());
+
+        for(PsiMethod getterMethod : methods){
 
             if(! getterMethod.getName().startsWith("get")){
                 continue;

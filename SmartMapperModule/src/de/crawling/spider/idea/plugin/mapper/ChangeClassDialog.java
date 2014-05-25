@@ -22,6 +22,7 @@ public class ChangeClassDialog extends JDialog {
     private JTextField variableNameTextField;
     private JTextField mapperClassTextField;
     private JTextField mapperVariableTextField;
+    private JCheckBox superCheckBox;
 
     private final Project project;
     private final SmartMapper smartMapper = new SmartMapper();
