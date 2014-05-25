@@ -38,7 +38,7 @@
 
   <actions>
     <!-- Add your actions here -->
-      <action id="smartMapper.Popup" class="de.crawling.spider.idea.plugin.mapper.SmartMapperEditorPopupAction" text="SmartMapperEditorPopupAction" description="maps smart">
+      <action id="smartMapper.Popup" class="de.crawling.spider.idea.plugin.mapper.SmartMapperEditorPopupAction" text="Smart Mapper" description="maps smart">
           <add-to-group group-id="EditorPopupMenu" anchor="first"/>
       </action>
   </actions>
