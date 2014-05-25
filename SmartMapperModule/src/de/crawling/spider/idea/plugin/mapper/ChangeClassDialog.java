@@ -1,21 +1,14 @@
 package de.crawling.spider.idea.plugin.mapper;
 
-import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
-import com.intellij.psi.filters.getters.ExpectedTypesGetter;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.*;
-import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
 import java.awt.event.*;
-import java.util.Collection;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ChangeClassDialog extends JDialog {
 
@@ -117,7 +110,7 @@ public class ChangeClassDialog extends JDialog {
                     mapperClassTextField.getText(),
                     mapperVariableTextField.getText());
 
-            updater.updateOnPsiElement(setterCalls, editorClass);
+            updater.updateWithinMethod(setterCalls, editorClass);
         }catch(NullPointerException ne){
             ne.printStackTrace();
         }finally {

@@ -56,7 +56,7 @@ public class Updater {
      * @param setterCalls
      * @param psiClass
      */
-    public void updateOnPsiElement(final String setterCalls, final PsiClass psiClass){
+    public void updateWithinMethod(final String setterCalls, final PsiClass psiClass){
 
 
         Editor editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
@@ -76,9 +76,26 @@ public class Updater {
 
             }
         }.execute();
+    }
 
+    /**
+     * updates the class over psi structure
+     * @param setterCalls
+     * @param psiClass
+     */
+    public void updateClassWithCreatingNewMethod(final String setterCalls, final PsiClass psiClass){
 
+        new WriteCommandAction.Simple(psiClass.getProject(), psiClass.getContainingFile()){
 
+            @Override
+            protected void run() throws Throwable {
 
+                PsiElementFactory factory = JavaPsiFacade.getElementFactory(psiClass.getProject());
+                PsiMethod map = factory.createMethodFromText(setterCalls, psiClass);
+                PsiElement method = psiClass.add(map);
+                JavaCodeStyleManager.getInstance(psiClass.getProject()).shortenClassReferences(method);
+
+            }
+        }.execute();
     }
 }
