@@ -58,7 +58,7 @@ public class ChangeClassDialog extends JDialog {
     }
 
     private void onOK() {
-        System.out.println(smartMapper.getAllSetterMethodsForClass(String.class));
+        System.out.println(smartMapper.getAllSetterMethodsForClass(classNameTextField.getText(), variableNameTextField.getText()));
         System.out.println(editor.getDocument().getText());
 
         dispose();
@@ -69,10 +69,4 @@ public class ChangeClassDialog extends JDialog {
         dispose();
     }
 
-//    public static void main(String[] args) {
-//        ChangeClassDialog dialog = new ChangeClassDialog();
-//        dialog.pack();
-//        dialog.setVisible(true);
-//        System.exit(0);
-//    }
 }

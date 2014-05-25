@@ -1,5 +1,6 @@
 package de.crawling.spider.idea.plugin.mapper;
 
+import javax.swing.*;
 import java.lang.reflect.Method;
 
 /**
@@ -7,21 +8,26 @@ import java.lang.reflect.Method;
  */
 public class SmartMapper {
 
-    public String getAllSetterMethodsForClass(Class setterClass) {
+    public String getAllSetterMethodsForClass(String className, String varName) {
 
         StringBuilder builder = new StringBuilder();
+        try {
 
-        Method[] methods = setterClass.getMethods();
-        String objectName = setterClass.getCanonicalName();
+            Class setterClass = Class.forName(className);
 
-        String varName = setterClass.getSimpleName().toLowerCase();
-
-        builder.append(objectName + " " + varName + " = new " + objectName +"();\n");
+            Method[] methods = setterClass.getMethods();
+            String objectName = setterClass.getCanonicalName();
 
 
-        for (Method method : methods) {
-            if (method.getName().startsWith("set"))
-                builder.append(varName + "." + method.getName() + "(value);\n");
+            builder.append(objectName + " " + varName + " = new " + objectName + "();\n");
+
+
+            for (Method method : methods) {
+                if (method.getName().startsWith("set"))
+                    builder.append(varName + "." + method.getName() + "(value);\n");
+            }
+        } catch (ClassNotFoundException c) {
+            JOptionPane.showMessageDialog(null, "Class '" + className + "' not found!!!", "Error", JOptionPane.ERROR_MESSAGE);
         }
         return builder.toString();
 
