@@ -7,14 +7,14 @@ import java.lang.reflect.Method;
  */
 public class SmartMapper {
 
-    public String getAllSetterMethodsForClass(Class bla) {
+    public String getAllSetterMethodsForClass(Class setterClass) {
 
         StringBuilder builder = new StringBuilder();
 
-        Method[] methods = bla.getMethods();
-        String objectName = bla.getCanonicalName();
+        Method[] methods = setterClass.getMethods();
+        String objectName = setterClass.getCanonicalName();
 
-        String varName = bla.getSimpleName().toLowerCase();
+        String varName = setterClass.getSimpleName().toLowerCase();
 
         builder.append(objectName + " " + varName + " = new " + objectName +"();\n");
 
