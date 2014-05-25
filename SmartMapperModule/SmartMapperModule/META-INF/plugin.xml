@@ -1,6 +1,6 @@
 <idea-plugin version="2">
-  <id>de.crawling.spider</id>
-  <name>Smart Mapper</name>
+  <id>com.yourcompany.unique.plugin.id</id>
+  <name>Plugin display name here</name>
   <version>1.0</version>
   <vendor email="stefan-scheffler@web.de" url="http://www.yourcompany.com">YourCompany</vendor>
 
