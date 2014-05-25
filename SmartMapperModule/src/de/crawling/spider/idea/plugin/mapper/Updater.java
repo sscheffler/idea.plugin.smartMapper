@@ -27,10 +27,10 @@ public class Updater {
      * updates the setter on the document
      * @param setterCalls
      */
-    public void updateOnDocument(String setterCalls, PsiClass psiClass){
+    public void updateOnDocument(final String setterCalls, PsiClass psiClass){
         Editor editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
-        Document document = editor.getDocument();
-        int cursorPos = editor.getCaretModel().getOffset();
+        final Document document = editor.getDocument();
+        final int cursorPos = editor.getCaretModel().getOffset();
 
         final Runnable insertRunner = new Runnable() {
             @Override
@@ -61,7 +61,7 @@ public class Updater {
 
         Editor editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
         Document document = editor.getDocument();
-        int cursorPos = editor.getCaretModel().getOffset();
+      final int cursorPos = editor.getCaretModel().getOffset();
 
         new WriteCommandAction.Simple(psiClass.getProject(), psiClass.getContainingFile()){
 
