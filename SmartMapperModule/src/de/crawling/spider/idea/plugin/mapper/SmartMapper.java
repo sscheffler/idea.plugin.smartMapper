@@ -3,6 +3,7 @@ package de.crawling.spider.idea.plugin.mapper;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.search.GlobalSearchScope;
 
@@ -14,12 +15,15 @@ import java.lang.reflect.Method;
  */
 public class SmartMapper {
 
+    public RegexUtil regexUtil = new RegexUtil();
+
     /**
      * Uses reflection to get setter methods
      * @param className
      * @param varName
      * @return
      */
+    @Deprecated
     public String getAllSetterMethodsForClass(String className, String varName) {
 
         StringBuilder builder = new StringBuilder();
@@ -30,19 +34,54 @@ public class SmartMapper {
             Method[] methods = setterClass.getMethods();
             String objectName = setterClass.getCanonicalName();
 
-
             builder.append(objectName + " " + varName + " = new " + objectName + "();\n");
-
 
             for (Method method : methods) {
                 if (method.getName().startsWith("set"))
                     builder.append(varName + "." + method.getName() + "(value);\n");
             }
+
         } catch (ClassNotFoundException c) {
             JOptionPane.showMessageDialog(null, "Class '" + className + "' not found!!!", "Error", JOptionPane.ERROR_MESSAGE);
         }
         return builder.toString();
 
+    }
+
+    public String getMappingMethod(
+            Project project,
+            String setterCanonicalClassName,
+            String setterVarName,
+            String getterCanonicalClassName,
+            String getterVarName) {
+
+        String setterClassName = regexUtil.calculateClassName(setterCanonicalClassName);
+        String getterClassName = regexUtil.calculateClassName(getterCanonicalClassName);
+
+        GlobalSearchScope scope = GlobalSearchScope.allScope(project);
+        PsiClass setterClass = JavaPsiFacade.getInstance(project).findClass(setterCanonicalClassName, scope);
+        PsiClass getterClass = JavaPsiFacade.getInstance(project).findClass(getterCanonicalClassName, scope);
+
+        if(null == setterClass){
+            return "";
+        }
+
+        StringBuilder builder = new StringBuilder();
+        builder.append("public " + setterClassName +" mapTo"+ setterClassName+"(final "+ getterClassName + " " + getterVarName +"){\n");
+        builder.append(setterClassName + " " + setterVarName + " = new " + setterClassName + "();\n");
+
+        for (PsiMethod setterMethod : setterClass.getMethods()) {
+            if(setterMethod.getName().startsWith("set")){
+                String setterName = setterMethod.getName();
+                String getterName = calculateGetter(getterClass, setterName);
+
+                builder.append(setterVarName + "." + setterName + "("+getterVarName+"."+getterName+");\n");
+
+            }
+        }
+
+        builder.append("return "+setterVarName+"\n}");
+        return builder.toString();
     }
 
     /**
@@ -52,6 +91,7 @@ public class SmartMapper {
      * @param varName
      * @return
      */
+    @Deprecated
     public String getAllSetterMethodsForClass(Project project, String setterClassName, String varName, String getterClassName) {
 
         StringBuilder builder = new StringBuilder();
@@ -87,21 +127,23 @@ public class SmartMapper {
 
         String swapSetter = setterName.replaceFirst("set", "");
 
-        if(null != getterClass){
-            for(PsiMethod getterMethod : getterClass.getMethods()){
+        if(null == getterClass){
+            return "";
+        }
 
-                if(! getterMethod.getName().startsWith("get")){
-                    continue;
-                }
+        for(PsiMethod getterMethod : getterClass.getMethods()){
 
-                String swapGetter = getterMethod.getName().replaceFirst("get", "");
-
-                if(swapSetter.toLowerCase().equals(swapGetter.toLowerCase())){
-                    getterName = getterMethod.getName()+"()";
-                    break;
-                }
-
+            if(! getterMethod.getName().startsWith("get")){
+                continue;
             }
+
+            String swapGetter = getterMethod.getName().replaceFirst("get", "");
+
+            if(swapSetter.toLowerCase().equals(swapGetter.toLowerCase())){
+                getterName = getterMethod.getName()+"()";
+                break;
+            }
+
         }
         return getterName;
     }

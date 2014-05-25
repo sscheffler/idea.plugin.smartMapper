@@ -18,7 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ChangeClassDialog extends JDialog {
-    public static final String EXTRACT_CLASS_NAME_PATTERN = ".*\\.([^\\.]*)$";
+
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
@@ -29,6 +29,7 @@ public class ChangeClassDialog extends JDialog {
 
     private final Project project;
     private final SmartMapper smartMapper = new SmartMapper();
+    private final RegexUtil regexUtil = new RegexUtil();
     private Updater updater;
     private PsiClass editorClass;
 
@@ -64,7 +65,7 @@ public class ChangeClassDialog extends JDialog {
             String variableName = "";
             PsiClass getterClass = JavaPsiFacade.getInstance(project).findClass(canonicalText, scope);
             if(null != getterClass){
-                variableName = calculateVariableName(canonicalText);
+                variableName = regexUtil.calculateVariableName(canonicalText);
 
 
             }else{
@@ -73,25 +74,11 @@ public class ChangeClassDialog extends JDialog {
 
             mapperClassTextField.setText(canonicalText);
             mapperVariableTextField.setText(variableName);
+            mapperVariableTextField.setToolTipText(variableName);
         }
     }
 
-    private String calculateVariableName(String canonicalText) {
-        String variableName="";
-        Pattern p = Pattern.compile(EXTRACT_CLASS_NAME_PATTERN);
-        Matcher m = p.matcher(canonicalText);
-        boolean classNameFound = m.find();
-        if(classNameFound){
-            String className = m.group(1);
-            if(StringUtils.isNotBlank(className)){
-                char c []={className.toCharArray()[0]};
-                String swapCharString = new String(c).toLowerCase();
-                String swapRestString = className.substring(1);
-                variableName = swapCharString + swapRestString;
-            }
-        }
-        return variableName;
-    }
+
 
     private void setActions() {
         buttonOK.addActionListener(new ActionListener() {
@@ -123,16 +110,18 @@ public class ChangeClassDialog extends JDialog {
 
     private void onOK() {
         try {
-            String setterCalls = smartMapper.getAllSetterMethodsForClass(
+            String setterCalls = smartMapper.getMappingMethod(
                     project,
                     classNameTextField.getText(),
                     variableNameTextField.getText(),
-                    mapperClassTextField.getText());
+                    mapperClassTextField.getText(),
+                    mapperVariableTextField.getText());
 
             updater.updateOnPsiElement(setterCalls, editorClass);
-            dispose();
         }catch(NullPointerException ne){
-
+            ne.printStackTrace();
+        }finally {
+            dispose();
         }
     }
 
