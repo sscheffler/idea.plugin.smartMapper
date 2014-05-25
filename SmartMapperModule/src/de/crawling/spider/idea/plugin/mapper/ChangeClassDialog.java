@@ -68,6 +68,7 @@ public class ChangeClassDialog extends JDialog {
                     classNameTextField.getText(),
                     variableNameTextField.getText(),
                     mapperClassTextField.getText());
+
             updater.updateOnPsiElement(setterCalls, editorClass);
             dispose();
         }catch(NullPointerException ne){

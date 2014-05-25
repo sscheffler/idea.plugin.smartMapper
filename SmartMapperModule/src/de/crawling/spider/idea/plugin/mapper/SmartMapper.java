@@ -57,20 +57,52 @@ public class SmartMapper {
         StringBuilder builder = new StringBuilder();
 
         GlobalSearchScope scope = GlobalSearchScope.allScope(project);
-        PsiClass psiClass = JavaPsiFacade.getInstance(project).findClass(setterClassName, scope);
+        PsiClass setterClass = JavaPsiFacade.getInstance(project).findClass(setterClassName, scope);
+        PsiClass getterClass = JavaPsiFacade.getInstance(project).findClass(getterClassName, scope);
 
-        if(null == psiClass){
+
+
+
+        if(null == setterClass){
             JOptionPane.showMessageDialog(null, "Class '" + setterClassName + "' not found!!!", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
         builder.append(setterClassName + " " + varName + " = new " + setterClassName + "();\n");
 
-        for (PsiMethod psiMethod : psiClass.getMethods()) {
-            if(psiMethod.getName().startsWith("set")){
-                builder.append(varName + "." + psiMethod.getName() + "();\n");
+        for (PsiMethod setterMethod : setterClass.getMethods()) {
+            if(setterMethod.getName().startsWith("set")){
+                String setterName = setterMethod.getName();
+                String getterName = calculateGetter(getterClass, setterName);
+
+                builder.append(varName + "." + setterName + "("+getterName+");\n");
+
             }
         }
         return builder.toString();
 
+    }
+
+    private String calculateGetter(PsiClass getterClass, String setterName) {
+        String getterName = "";
+
+        String swapSetter = setterName.replaceFirst("set", "");
+
+        if(null != getterClass){
+            for(PsiMethod getterMethod : getterClass.getMethods()){
+
+                if(! getterMethod.getName().startsWith("get")){
+                    continue;
+                }
+
+                String swapGetter = getterMethod.getName().replaceFirst("get", "");
+
+                if(swapSetter.toLowerCase().equals(swapGetter.toLowerCase())){
+                    getterName = getterMethod.getName()+"()";
+                    break;
+                }
+
+            }
+        }
+        return getterName;
     }
 }
