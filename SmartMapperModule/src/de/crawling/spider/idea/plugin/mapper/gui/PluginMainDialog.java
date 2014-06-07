@@ -126,17 +126,25 @@ public class PluginMainDialog extends DialogWrapper {
     public java.util.List<PsiMethod> getSelectedSetterMethods(){
         java.util.List<PsiMethod> returnList = new ArrayList<>();
         int[] indizes = methodList.getSelectedIndices();
-        for(int index: indizes){
-            try {
-                returnList.add(methodModel.getElementAt(index));
-            }catch (ArrayIndexOutOfBoundsException e){
+        if(0 != indizes.length){
+            //return selected elements
+            for(int index: indizes){
+                try {
+                    returnList.add(methodModel.getElementAt(index));
+                }catch (ArrayIndexOutOfBoundsException e){
+
+                }
 
             }
-
+        }else{
+            //return all elements
+            returnList = methodModel.getItems();
         }
 
         return returnList;
     }
+
+
 
     public String getCannonicalClassName(){
         return setterTextField.getText();
