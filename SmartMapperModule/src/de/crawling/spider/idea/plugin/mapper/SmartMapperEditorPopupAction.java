@@ -3,30 +3,13 @@ package de.crawling.spider.idea.plugin.mapper;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.OrderEntry;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.roots.impl.ProjectFileIndexImpl;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.file.PsiFileImplUtil;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.search.PsiShortNamesCache;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtil;
+import de.crawling.spider.idea.plugin.mapper.gui.ChangeClassDialog;
 
 import javax.swing.*;
-import java.lang.reflect.Method;
-import java.util.List;
 
 /**
  * Created by sscheffler on 24.05.14.
@@ -42,6 +25,8 @@ public class SmartMapperEditorPopupAction extends AnAction {
         int cursorPostion = editor.getCaretModel().getOffset();
 
         PsiElement psiElement = psiFile.findElementAt(cursorPostion);
+        //TODO:check out
+        //PsiTreeUtil.getParentOfType(psiElement, PsiClass.class);
         PsiClass editorClass = PsiTreeUtil.getParentOfType(psiElement, PsiClass.class);
 
 

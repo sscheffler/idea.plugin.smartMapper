@@ -1,4 +1,4 @@
-package de.crawling.spider.idea.plugin.mapper;
+package de.crawling.spider.idea.plugin.mapper.gui;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -6,6 +6,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.*;
+import de.crawling.spider.idea.plugin.mapper.RegexUtil;
+import de.crawling.spider.idea.plugin.mapper.SmartMapper;
+import de.crawling.spider.idea.plugin.mapper.Updater;
 import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
