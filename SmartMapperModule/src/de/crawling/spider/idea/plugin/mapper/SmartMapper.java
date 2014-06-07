@@ -54,6 +54,42 @@ public class SmartMapper {
 
     }
 
+
+    public String getSimpleMappingMethodForSelecion(final String setterCanonicalClassName,
+                                         final String setterVarName,
+                                         final List<PsiMethod> selectedMethods,
+                                         final Project project){
+
+        StringBuilder builder = new StringBuilder();
+        String setterClassName = regexUtil.calculateClassName(setterCanonicalClassName);
+        GlobalSearchScope scope = GlobalSearchScope.allScope(project);
+
+        //Error Handling
+        PsiClass setterClass = JavaPsiFacade.getInstance(project).findClass(setterCanonicalClassName, scope);
+
+        if(null == setterClass){
+            JOptionPane.showMessageDialog(null, "ClassName: " + setterCanonicalClassName+" not known", "Input Failure" , JOptionPane.ERROR_MESSAGE);
+            return "";
+        }
+
+
+        builder.append("public " + setterClassName +" mapTo"+ setterClassName+"(){\n");
+        builder.append(setterClassName + " " + setterVarName + " = new " + setterClassName + "();\n");
+
+        for (PsiMethod setterMethod : selectedMethods) {
+            if(setterMethod.getName().startsWith("set")){
+                String setterName = setterMethod.getName();
+
+                builder.append(setterVarName + "." + setterName + "( );\n");
+
+            }
+        }
+
+        builder.append("return "+setterVarName+";\n}");
+        return builder.toString();
+
+    }
+
     public String getMappingMethod(
             final Project project,
             final String setterCanonicalClassName,
