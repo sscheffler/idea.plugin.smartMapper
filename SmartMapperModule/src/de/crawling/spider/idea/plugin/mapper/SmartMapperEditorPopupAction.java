@@ -11,6 +11,7 @@ import de.crawling.spider.idea.plugin.mapper.gui.ChangeClassDialog;
 import de.crawling.spider.idea.plugin.mapper.gui.PluginMainDialog;
 
 import javax.swing.*;
+import java.util.List;
 
 /**
  * Created by sscheffler on 24.05.14.
@@ -26,6 +27,7 @@ public class SmartMapperEditorPopupAction extends AnAction {
             PluginMainDialog dialog = new PluginMainDialog(project);
             dialog.show();
             if(dialog.isOK()){
+                List<PsiMethod> methods = dialog.getSelectedSetterMethods();
                 //TODO: implement
             }
 

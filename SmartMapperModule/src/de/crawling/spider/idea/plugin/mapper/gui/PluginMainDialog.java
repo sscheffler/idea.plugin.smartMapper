@@ -3,7 +3,6 @@ package de.crawling.spider.idea.plugin.mapper.gui;
 import com.intellij.ide.util.DefaultPsiElementCellRenderer;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.ui.CollectionListModel;
@@ -13,8 +12,10 @@ import com.intellij.ui.components.JBTextField;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.*;
 
 /**
  * Created by sscheffler on 07.06.14.
@@ -24,10 +25,11 @@ public class PluginMainDialog extends DialogWrapper {
 
     public static final String TITLE = "Smart Mapper";
 
-    private CollectionListModel<PsiMethod> fieldModel;
+    private CollectionListModel<PsiMethod> methodModel;
     private GlobalSearchScope scope;
     private JavaPsiFacade javaFacade;
     private PsiClass selectedPsiClass;
+    private JBList methodList;
 
     JPanel mainPanel;
     JBTextField setterTextField;
@@ -38,9 +40,10 @@ public class PluginMainDialog extends DialogWrapper {
 
         scope = GlobalSearchScope.allScope(project);
         javaFacade = JavaPsiFacade.getInstance(project);
-        fieldModel = new CollectionListModel<>();
+        methodModel = new CollectionListModel<>();
 
         buildGuiElementStructure();
+        setterTextField.requestFocus();
         init();
     }
 
@@ -48,18 +51,26 @@ public class PluginMainDialog extends DialogWrapper {
      * visualization
      */
     private void buildGuiElementStructure() {
-        final JBList methodList = new JBList(fieldModel);
+        methodList = new JBList(methodModel);
         methodList.setCellRenderer(new DefaultPsiElementCellRenderer());
+        setterTextField = new JBTextField();
+        mainPanel = new JPanel(new BorderLayout());
+
+        //TODO: make dynamic
+        setSize(400,400);
 
         ToolbarDecorator decorator = ToolbarDecorator.createDecorator(methodList);
-        JPanel methodListPanel = decorator.createPanel();
-        mainPanel = new JPanel();
-        setterTextField = new JBTextField(" ");
+
+        JPanel methodListMainPanel = new JPanel(new BorderLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        JPanel methodListSubPanel = decorator.createPanel();
+
+        methodListMainPanel.add(setterTextField, BorderLayout.NORTH);
+        methodListMainPanel.add(methodListSubPanel, BorderLayout.CENTER);
+
+        mainPanel.add(methodListMainPanel);
+
         addSetterKeyListener();
-
-        mainPanel.add(setterTextField);
-
-        mainPanel.add(methodListPanel);
     }
 
     @Nullable
@@ -96,7 +107,7 @@ public class PluginMainDialog extends DialogWrapper {
                     selectedPsiClass = setterClass;
                     for (PsiMethod setterMethod : setterClass.getMethods()) {
                         if (setterMethod.getName().startsWith("set")) {
-                            fieldModel.add(setterMethod);
+                            methodModel.add(setterMethod);
                         }
                     }
                 }
@@ -104,6 +115,21 @@ public class PluginMainDialog extends DialogWrapper {
 
 
         });
+    }
+
+    public java.util.List<PsiMethod> getSelectedSetterMethods(){
+        java.util.List<PsiMethod> returnList = new ArrayList<>();
+        int[] indizes = methodList.getSelectedIndices();
+        for(int index: indizes){
+            try {
+                returnList.add(methodModel.getElementAt(index));
+            }catch (ArrayIndexOutOfBoundsException e){
+
+            }
+
+        }
+
+        return returnList;
     }
 
 
