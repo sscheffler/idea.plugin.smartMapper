@@ -56,13 +56,13 @@ public class SmartMapper {
 
 
     public String getSimpleMappingMethodForSelecion(final String setterCanonicalClassName,
-                                         final String setterVarName,
                                          final List<PsiMethod> selectedMethods,
                                          final Project project){
 
         StringBuilder builder = new StringBuilder();
         String setterClassName = regexUtil.calculateClassName(setterCanonicalClassName);
         GlobalSearchScope scope = GlobalSearchScope.allScope(project);
+        String setterVarName = regexUtil.calculateVariableName(setterCanonicalClassName);
 
         //Error Handling
         PsiClass setterClass = JavaPsiFacade.getInstance(project).findClass(setterCanonicalClassName, scope);
