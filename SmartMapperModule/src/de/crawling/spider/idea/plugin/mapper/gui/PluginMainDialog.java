@@ -9,6 +9,7 @@ import com.intellij.ui.CollectionListModel;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBTextField;
+import com.intellij.util.containers.SortedList;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -16,6 +17,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.*;
+import java.util.List;
 
 /**
  * Created by sscheffler on 07.06.14.
@@ -106,11 +108,14 @@ public class PluginMainDialog extends DialogWrapper {
                 PsiClass setterClass = javaFacade.findClass(fieldValue, scope);
                 if (null != setterClass && setterClass != selectedPsiClass) {
                     selectedPsiClass = setterClass;
+                    List<PsiMethod> sortedList = new SortedList<>(PsiMethodComparator.INSTANCE);
                     for (PsiMethod setterMethod : setterClass.getMethods()) {
+
                         if (setterMethod.getName().startsWith("set")) {
-                            methodModel.add(setterMethod);
+                            sortedList.add(setterMethod);
                         }
                     }
+                    methodModel.add(sortedList);
                 }
             }
 
@@ -141,8 +146,26 @@ public class PluginMainDialog extends DialogWrapper {
         return selectedPsiClass;
     }
 
+}
 
+class PsiMethodComparator implements Comparator<PsiMethod>{
 
+    public static final PsiMethodComparator INSTANCE  = new PsiMethodComparator();
 
+    private PsiMethodComparator() {
+    }
 
+    @Override
+    public int compare(PsiMethod o1, PsiMethod o2) {
+        if (o1.getName() == null && o2.getName() == null) {
+            return 0;
+        }
+        if (o2.getName() == null) {
+            return 1;
+        }
+        if (o1.getName() == null) {
+            return -1;
+        }
+        return o1.getName().compareTo(o2.getName());
+    }
 }
