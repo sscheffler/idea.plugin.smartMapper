@@ -23,7 +23,7 @@ public class SmartMapperEditorPopupAction extends AnAction {
     private void startMainDialog(AnActionEvent e){
         try {
             final Project project = e.getProject();
-            PluginMainDialog dialog = new PluginMainDialog(project, getPsiClass(e));
+            PluginMainDialog dialog = new PluginMainDialog(project);
             dialog.show();
             if(dialog.isOK()){
                 //TODO: implement
