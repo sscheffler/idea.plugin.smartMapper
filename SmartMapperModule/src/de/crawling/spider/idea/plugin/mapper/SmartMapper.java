@@ -72,6 +72,10 @@ public class SmartMapper {
             return "";
         }
 
+        if(selectedMethods.isEmpty()){
+            return "";
+        }
+
 
         builder.append("public " + setterClassName +" mapTo"+ setterClassName+"(){\n");
         builder.append(setterClassName + " " + setterVarName + " = new " + setterClassName + "();\n");

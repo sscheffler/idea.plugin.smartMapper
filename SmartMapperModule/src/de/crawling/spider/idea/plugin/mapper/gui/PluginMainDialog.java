@@ -31,6 +31,7 @@ public class PluginMainDialog extends DialogWrapper {
     private PsiClass selectedPsiClass;
     private JBList methodList;
 
+
     JPanel mainPanel;
     JBTextField setterTextField;
 
@@ -130,6 +131,14 @@ public class PluginMainDialog extends DialogWrapper {
         }
 
         return returnList;
+    }
+
+    public String getCannonicalClassName(){
+        return setterTextField.getText();
+    }
+
+    public PsiClass getSelectedClass(){
+        return selectedPsiClass;
     }
 
 

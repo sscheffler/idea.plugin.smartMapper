@@ -13,10 +13,16 @@ import de.crawling.spider.idea.plugin.mapper.gui.PluginMainDialog;
 import javax.swing.*;
 import java.util.List;
 
+import static org.apache.commons.lang.StringUtils.isNotBlank;
+
 /**
  * Created by sscheffler on 24.05.14.
  */
 public class SmartMapperEditorPopupAction extends AnAction {
+
+    private final SmartMapper smartMapper = new SmartMapper();
+    private Updater updater;
+
     public void actionPerformed(AnActionEvent e) {
         startMainDialog(e);
     }
@@ -26,9 +32,21 @@ public class SmartMapperEditorPopupAction extends AnAction {
             final Project project = e.getProject();
             PluginMainDialog dialog = new PluginMainDialog(project);
             dialog.show();
-            if(dialog.isOK()){
+            if(dialog.isOK() && null != dialog.getSelectedClass()){
+                updater = new Updater(project);
                 List<PsiMethod> methods = dialog.getSelectedSetterMethods();
-                //TODO: implement
+
+                String methodString = smartMapper.getSimpleMappingMethodForSelecion(
+                        dialog.getCannonicalClassName(),
+                        methods,
+                        project
+                );
+
+                if(isNotBlank(methodString)) {
+                    updater.updateClassWithCreatingNewMethod(methodString, dialog.getSelectedClass());
+                }else{
+                    return;
+                }
             }
 
         }catch(IllegalArgumentException ex){
