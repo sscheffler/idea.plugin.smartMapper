@@ -25,23 +25,16 @@ public class SmartMapperEditorPopupAction extends AnAction {
             final Project project = e.getProject();
             PluginMainDialog dialog = new PluginMainDialog(project, getPsiClass(e));
             dialog.show();
+            if(dialog.isOK()){
+                //TODO: implement
+            }
 
         }catch(IllegalArgumentException ex){
             JOptionPane.showMessageDialog(null, ex.getMessage(), "No editor open", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
-    @Deprecated
-    private void startDialog(final PsiClass editorClass) {
 
-        try {
-            ChangeClassDialog dialog = new ChangeClassDialog(editorClass);
-            dialog.pack();
-            dialog.setVisible(true);
-        }catch(IllegalArgumentException e){
-            JOptionPane.showMessageDialog(null, e.getMessage(), "No editor open", JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
 
     private PsiClass getPsiClass(AnActionEvent e){
         PsiFile psiFile = e.getData(LangDataKeys.PSI_FILE);
