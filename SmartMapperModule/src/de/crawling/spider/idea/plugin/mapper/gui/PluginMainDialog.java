@@ -32,7 +32,6 @@ public class PluginMainDialog extends DialogWrapper {
 
     public PluginMainDialog(@Nullable Project project, PsiClass psiClass) {
         super(project);
-        init();
         setTitle(TITLE);
 
         if(null != psiClass){
@@ -41,13 +40,14 @@ public class PluginMainDialog extends DialogWrapper {
         }
 
         //TODO: use instead
-//        JBList fieldList = new JBList(fieldModel);
-        JList fieldList = new JList(fieldModel);
+        JBList fieldList = new JBList(fieldModel);
         fieldList.setCellRenderer(new DefaultPsiElementCellRenderer());
 
         ToolbarDecorator decorator = ToolbarDecorator.createDecorator(fieldList);
         JPanel panel = decorator.createPanel();
         fieldListPanel = LabeledComponent.create(panel, "FieldList");
+
+        init();
     }
 
     @Nullable

@@ -25,7 +25,7 @@ public class SmartMapperEditorPopupAction extends AnAction {
             final Project project = e.getProject();
             PluginMainDialog dialog = new PluginMainDialog(project, getPsiClass(e));
             dialog.show();
-            
+
         }catch(IllegalArgumentException ex){
             JOptionPane.showMessageDialog(null, ex.getMessage(), "No editor open", JOptionPane.INFORMATION_MESSAGE);
         }
