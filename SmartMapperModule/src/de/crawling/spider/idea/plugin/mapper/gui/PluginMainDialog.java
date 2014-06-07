@@ -3,6 +3,7 @@ package de.crawling.spider.idea.plugin.mapper.gui;
 import com.intellij.ide.util.DefaultPsiElementCellRenderer;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.ui.CollectionListModel;
@@ -30,12 +31,14 @@ public class PluginMainDialog extends DialogWrapper {
     private CollectionListModel<PsiMethod> methodModel;
     private GlobalSearchScope scope;
     private JavaPsiFacade javaFacade;
-    private PsiClass selectedPsiClass;
+    private PsiClass selectedSetterPsiClass;
+    private PsiClass selectedGetterPsiClass;
     private JBList methodList;
 
 
     JPanel mainPanel;
     JBTextField setterTextField;
+    JBTextField getterTextField;
 
     public PluginMainDialog(@Nullable Project project) {
         super(project);
@@ -46,7 +49,6 @@ public class PluginMainDialog extends DialogWrapper {
         methodModel = new CollectionListModel<>();
 
         buildGuiElementStructure();
-        setterTextField.requestFocus();
         init();
     }
 
@@ -57,6 +59,7 @@ public class PluginMainDialog extends DialogWrapper {
         methodList = new JBList(methodModel);
         methodList.setCellRenderer(new DefaultPsiElementCellRenderer());
         setterTextField = new JBTextField();
+        getterTextField = new JBTextField();
         mainPanel = new JPanel(new BorderLayout());
 
         //TODO: make dynamic
@@ -67,13 +70,19 @@ public class PluginMainDialog extends DialogWrapper {
         JPanel methodListMainPanel = new JPanel(new BorderLayout());
         GridBagConstraints c = new GridBagConstraints();
         JPanel methodListSubPanel = decorator.createPanel();
+        JPanel northPanel = new JPanel(new FlowLayout());
 
-        methodListMainPanel.add(setterTextField, BorderLayout.NORTH);
+
+
+        northPanel.add(LabeledComponent.create(setterTextField, "setterClass:"));
+        northPanel.add(LabeledComponent.create(getterTextField, "getterClass:"));
+
+        methodListMainPanel.add(northPanel, BorderLayout.NORTH);
         methodListMainPanel.add(methodListSubPanel, BorderLayout.CENTER);
 
         mainPanel.add(methodListMainPanel);
 
-        addSetterKeyListener();
+        addKeyListenerToTextFields();
     }
 
     @Nullable
@@ -83,45 +92,12 @@ public class PluginMainDialog extends DialogWrapper {
     }
 
 
-    public void addSetterKeyListener(){
-        setterTextField.addKeyListener(new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                performKeyHandling();
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-                performKeyHandling();
-
-
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-                performKeyHandling();
-            }
-
-            private void performKeyHandling() {
-                String fieldValue = setterTextField.getText();
-
-                PsiClass setterClass = javaFacade.findClass(fieldValue, scope);
-                if (null != setterClass && setterClass != selectedPsiClass) {
-                    selectedPsiClass = setterClass;
-                    List<PsiMethod> sortedList = new SortedList<>(PsiMethodComparator.INSTANCE);
-                    for (PsiMethod setterMethod : setterClass.getMethods()) {
-
-                        if (setterMethod.getName().startsWith("set")) {
-                            sortedList.add(setterMethod);
-                        }
-                    }
-                    methodModel.add(sortedList);
-                }
-            }
-
-
-        });
+    public void addKeyListenerToTextFields(){
+        setterTextField.addKeyListener(new SetterPsiClassFindKeyListner(this, setterTextField, methodModel, scope, javaFacade));
+        getterTextField.addKeyListener(new GetterPsiClassFindKeyListner(this, getterTextField, scope, javaFacade));
     }
+
+
 
     public java.util.List<PsiMethod> getSelectedSetterMethods(){
         java.util.List<PsiMethod> returnList = new ArrayList<>();
@@ -146,12 +122,28 @@ public class PluginMainDialog extends DialogWrapper {
 
 
 
-    public String getCannonicalClassName(){
+    public String getCannonicalSetterClassName(){
         return setterTextField.getText();
     }
 
-    public PsiClass getSelectedClass(){
-        return selectedPsiClass;
+    public String getCannonicalGetterClassName(){
+        return getterTextField.getText();
+    }
+
+    public PsiClass getSelectedSetterClass(){
+        return selectedSetterPsiClass;
+    }
+
+    public void setSelectedSetterClass(PsiClass psiClass){
+        this.selectedSetterPsiClass = psiClass;
+    }
+
+    public void setSelectedGetterClass(PsiClass psiClass){
+        this.selectedGetterPsiClass = psiClass;
+    }
+
+    public PsiClass getSelectedGetterPsiClass(){
+        return selectedGetterPsiClass;
     }
 
 }
@@ -159,6 +151,9 @@ public class PluginMainDialog extends DialogWrapper {
 class PsiMethodComparator implements Comparator<PsiMethod>{
 
     public static final PsiMethodComparator INSTANCE  = new PsiMethodComparator();
+
+
+
 
     private PsiMethodComparator() {
     }
@@ -176,4 +171,99 @@ class PsiMethodComparator implements Comparator<PsiMethod>{
         }
         return o1.getName().compareTo(o2.getName());
     }
+
+
+}
+
+class SetterPsiClassFindKeyListner implements KeyListener{
+
+    private JBTextField textField;
+    private CollectionListModel<PsiMethod> methodModel;
+    private GlobalSearchScope scope;
+    private JavaPsiFacade javaFacade;
+    private PluginMainDialog pluginMainDialog;
+
+    SetterPsiClassFindKeyListner(PluginMainDialog pluginMainDialog, JBTextField textField, CollectionListModel<PsiMethod> methodModel, GlobalSearchScope scope, JavaPsiFacade javaFacade) {
+        this.pluginMainDialog = pluginMainDialog;
+        this.textField = textField;
+        this.methodModel = methodModel;
+        this.scope = scope;
+        this.javaFacade = javaFacade;
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        performKeyHandling();
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        performKeyHandling();
+
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        performKeyHandling();
+    }
+
+    private void performKeyHandling() {
+        String fieldValue = textField.getText();
+        PsiClass psiClass = javaFacade.findClass(fieldValue, scope);
+        if (null != psiClass && psiClass != pluginMainDialog.getSelectedSetterClass()) {
+            pluginMainDialog.setSelectedSetterClass(psiClass);
+            List<PsiMethod> sortedList = new SortedList<>(PsiMethodComparator.INSTANCE);
+            for (PsiMethod setterMethod : psiClass.getMethods()) {
+
+                if (setterMethod.getName().startsWith("set")) {
+                    sortedList.add(setterMethod);
+                }
+            }
+            methodModel.add(sortedList);
+        }
+    }
+
+}
+
+class GetterPsiClassFindKeyListner implements KeyListener{
+
+    private JBTextField textField;
+    private GlobalSearchScope scope;
+    private JavaPsiFacade javaFacade;
+    private PluginMainDialog pluginMainDialog;
+
+    GetterPsiClassFindKeyListner(PluginMainDialog pluginMainDialog, JBTextField textField, GlobalSearchScope scope, JavaPsiFacade javaFacade) {
+        this.pluginMainDialog = pluginMainDialog;
+        this.textField = textField;
+        this.scope = scope;
+        this.javaFacade = javaFacade;
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        performKeyHandling();
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        performKeyHandling();
+
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        performKeyHandling();
+    }
+
+    private void performKeyHandling() {
+        String fieldValue = textField.getText();
+
+        PsiClass psiClass = javaFacade.findClass(fieldValue, scope);
+        if (null != psiClass && psiClass != pluginMainDialog.getSelectedGetterPsiClass()) {
+            pluginMainDialog.setSelectedGetterClass(psiClass);
+        }
+    }
+
 }

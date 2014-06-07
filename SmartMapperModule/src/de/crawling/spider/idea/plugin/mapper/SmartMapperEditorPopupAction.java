@@ -7,7 +7,6 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
-import de.crawling.spider.idea.plugin.mapper.gui.ChangeClassDialog;
 import de.crawling.spider.idea.plugin.mapper.gui.PluginMainDialog;
 
 import javax.swing.*;
@@ -32,18 +31,19 @@ public class SmartMapperEditorPopupAction extends AnAction {
             final Project project = e.getProject();
             PluginMainDialog dialog = new PluginMainDialog(project);
             dialog.show();
-            if(dialog.isOK() && null != dialog.getSelectedClass()){
+            if(dialog.isOK() && null != dialog.getSelectedSetterClass()){
+                PsiClass getterClass = dialog.getSelectedGetterPsiClass();
                 updater = new Updater(project);
                 List<PsiMethod> methods = dialog.getSelectedSetterMethods();
 
                 String methodString = smartMapper.getSimpleMappingMethodForSelecion(
-                        dialog.getCannonicalClassName(),
+                        dialog.getCannonicalSetterClassName(),
                         methods,
                         project
                 );
 
                 if(isNotBlank(methodString)) {
-                    updater.updateClassWithCreatingNewMethod(methodString, dialog.getSelectedClass());
+                    updater.updateClassWithCreatingNewMethod(methodString, dialog.getSelectedSetterClass());
                 }else{
                     return;
                 }
