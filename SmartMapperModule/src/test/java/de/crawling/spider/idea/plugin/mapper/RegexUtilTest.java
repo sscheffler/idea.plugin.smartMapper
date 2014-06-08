@@ -4,6 +4,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 /**
@@ -52,6 +54,32 @@ public class RegexUtilTest {
         assertEquals(expected, toTestNonCanonical);
     }
 
+    /**
+    * test: test errors of method findAllMethodsWithIndex
+    *
+    * @author sscheffler
+    * @date 08.06.14
+    */
+    @Test
+    public final void testFindAllMethodsError() {
+        List<String> toTest = regexUtil.findAllMethodsWithIndex("", "", null);
+        assertEquals(0, toTest.size());
 
+        toTest = regexUtil.findAllMethodsWithIndex("bla", "weh", null);
+        assertEquals(0, toTest.size());
 
+        toTest = regexUtil.findAllMethodsWithIndex("bla", null, null);
+        assertEquals(0, toTest.size());
+    }
+
+    /**
+    * test success findAllMethodsWithIndex
+    *
+    * @author sscheffler
+    * @date 08.06.14
+    */
+    @Test
+    public final void testFindAllMethodsSuccess() {
+        
+    }
 }
