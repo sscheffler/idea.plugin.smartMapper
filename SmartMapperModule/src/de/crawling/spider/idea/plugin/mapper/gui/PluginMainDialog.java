@@ -12,6 +12,7 @@ import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.containers.SortedList;
+import de.crawling.spider.idea.plugin.mapper.MapperProperties;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -35,16 +36,19 @@ public class PluginMainDialog extends DialogWrapper {
     private PsiClass selectedSetterPsiClass;
     private PsiClass selectedGetterPsiClass;
     private JBList methodList;
-private Color originalTextFieldBackGroundColor;
+    private Project project;
+    private Color originalTextFieldBackGroundColor;
 
 
     JPanel mainPanel;
     JBTextField setterTextField;
     JBTextField getterTextField;
     JBCheckBox loadSuperClassGetterMethods;
+    JBCheckBox fillWithDefaultValues;
 
     public PluginMainDialog(@Nullable Project project) {
         super(project);
+        this.project = project;
         setTitle(TITLE);
 
         scope = GlobalSearchScope.allScope(project);
@@ -64,6 +68,7 @@ private Color originalTextFieldBackGroundColor;
         setterTextField = new JBTextField();
         getterTextField = new JBTextField();
         loadSuperClassGetterMethods = new JBCheckBox("super", Boolean.TRUE);
+        fillWithDefaultValues = new JBCheckBox("default", Boolean.FALSE);
         originalTextFieldBackGroundColor = setterTextField.getBackground();
         mainPanel = new JPanel(new BorderLayout());
 
@@ -82,6 +87,7 @@ private Color originalTextFieldBackGroundColor;
         northPanel.add(LabeledComponent.create(setterTextField, "setterClass:"));
         northPanel.add(LabeledComponent.create(getterTextField, "getterClass:"));
         northPanel.add(loadSuperClassGetterMethods);
+        northPanel.add(fillWithDefaultValues);
 
         methodListMainPanel.add(northPanel, BorderLayout.NORTH);
         methodListMainPanel.add(methodListSubPanel, BorderLayout.CENTER);
@@ -130,6 +136,10 @@ private Color originalTextFieldBackGroundColor;
         return this.loadSuperClassGetterMethods.isSelected();
     }
 
+    public boolean isFillWithDefaultValues(){
+        return this.fillWithDefaultValues.isSelected();
+    }
+
     public String getCannonicalSetterClassName(){
         return setterTextField.getText();
     }
@@ -164,6 +174,17 @@ private Color originalTextFieldBackGroundColor;
 
     public void setGetterColor(Color color){
         getterTextField.setBackground(color);
+    }
+
+    public MapperProperties getMapperProperties(){
+        return new MapperProperties(
+                getCannonicalSetterClassName(),
+                getCannonicalGetterClassName(),
+                getSelectedSetterMethods(),
+                project,
+                isSuperClassMapping(),
+                isFillWithDefaultValues()
+        );
     }
 
 }
