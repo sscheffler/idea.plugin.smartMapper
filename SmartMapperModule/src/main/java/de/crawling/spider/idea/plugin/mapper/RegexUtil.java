@@ -19,6 +19,11 @@ public class RegexUtil {
     private RegexUtil() {
     }
 
+    /**
+     * gets a variable name by a caconcial ClassString('e.g.: com.foo.BarTender' = 'barTender')
+     * @param canonicalText
+     * @return
+     */
     public String calculateVariableName(String canonicalText) {
         String variableName="";
         String className = calculateClassName(canonicalText);
@@ -34,6 +39,11 @@ public class RegexUtil {
     }
 
 
+    /**
+     * gets the classname by a caconcial String('e.g.: com.foo.Bar' = 'Bar')
+     * @param canonicalText
+     * @return
+     */
     public String calculateClassName(String canonicalText) {
         Pattern p = Pattern.compile(EXTRACT_CLASS_NAME_PATTERN);
         Matcher m = p.matcher(canonicalText);
