@@ -9,6 +9,8 @@ import com.intellij.psi.search.GlobalSearchScope;
 import de.crawling.spider.idea.plugin.mapper.MapperProperties;
 import de.crawling.spider.idea.plugin.mapper.RegexUtil;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.lang.reflect.Method;
@@ -24,6 +26,7 @@ import static org.apache.commons.lang.StringUtils.*;
 public class DefaultSmartMapperImpl implements SmartMapper{
 
     private RegexUtil regexUtil = new RegexUtil();
+    private static Logger LOGGER = LoggerFactory.getLogger(DefaultSmartMapperImpl.class);
 
     private String getMappingMethodForSelecionWithGetterClass(MapperProperties mapperProperties){
         StringBuilder builder = new StringBuilder();
@@ -53,6 +56,7 @@ public class DefaultSmartMapperImpl implements SmartMapper{
         for (PsiMethod setterMethod : mapperProperties.getSelectedMethods()) {
             if(setterMethod.getName().startsWith("set")){
                 String setterName = setterMethod.getName();
+                LOGGER.trace("Building setter String for:{}", setterName);
                 String getterName = calculateGetter(getterClass,getterVarName, setterName, mapperProperties.isLoadSuperClassMethods());
 
                 builder.append(setterVarName + "." + setterName + "( "+getterName+" );\n");
@@ -104,6 +108,7 @@ public class DefaultSmartMapperImpl implements SmartMapper{
         for (PsiMethod setterMethod : mapperProperties.getSelectedMethods()) {
             if(setterMethod.getName().startsWith("set")){
                 String setterName = setterMethod.getName();
+                LOGGER.trace("Building setter String for:{}", setterName);
 
                 builder.append(setterVarName + "." + setterName + "( );\n");
 
@@ -148,8 +153,11 @@ public class DefaultSmartMapperImpl implements SmartMapper{
     public String buildMapperMethod(final MapperProperties properties) {
         String returnValue = "";
         if(properties.propertiesValidForGetter()){
+            LOGGER.info("Mapping with getter methods was performed");
             returnValue =  getMappingMethodForSelecionWithGetterClass(properties);
+
         }else{
+            LOGGER.info("just creating setterMethods");
             returnValue = getSimpleMappingMethodForSelecion(properties);
         }
 

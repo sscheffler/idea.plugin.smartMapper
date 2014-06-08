@@ -15,6 +15,7 @@ import com.intellij.util.containers.SortedList;
 import de.crawling.spider.idea.plugin.mapper.MapperProperties;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +30,6 @@ import static org.apache.commons.lang.StringUtils.*;
  * Created by sscheffler on 07.06.14.
  */
 public class PluginMainDialog extends DialogWrapper {
-
 
     public static final String TITLE = "Smart Mapper";
 
@@ -50,6 +50,7 @@ public class PluginMainDialog extends DialogWrapper {
     JBCheckBox fillWithDefaultValues;
 
     public PluginMainDialog(@Nullable Project project) {
+
         super(project);
         this.project = project;
         setTitle(TITLE);
