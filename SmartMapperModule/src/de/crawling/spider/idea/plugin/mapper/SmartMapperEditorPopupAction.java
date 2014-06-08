@@ -15,8 +15,6 @@ import de.crawling.spider.idea.plugin.mapper.update.Updater;
 
 import javax.swing.*;
 
-import static org.apache.commons.lang.StringUtils.isNotBlank;
-
 /**
  * Created by sscheffler on 24.05.14.
  */
@@ -38,7 +36,7 @@ public class SmartMapperEditorPopupAction extends AnAction {
 
             if(dialog.isOK() && properties.propertiesValid()){
                 updater = new DefaultUpdaterImpl(project);
-                String methodString = smartMapper.buildmapperMethod(properties);
+                String methodString = smartMapper.buildMapperMethod(properties);
                 updater.updateClassWithMethod(methodString, dialog.getSelectedSetterClass());
             }
 

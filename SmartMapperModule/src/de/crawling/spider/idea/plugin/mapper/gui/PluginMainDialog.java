@@ -13,6 +13,7 @@ import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.containers.SortedList;
 import de.crawling.spider.idea.plugin.mapper.MapperProperties;
+import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -21,6 +22,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.*;
 import java.util.List;
+
+import static org.apache.commons.lang.StringUtils.*;
 
 /**
  * Created by sscheffler on 07.06.14.
@@ -250,7 +253,7 @@ class SetterPsiClassFindKeyListner implements KeyListener{
     }
 
     private void performKeyHandling() {
-        String fieldValue = textField.getText();
+        String fieldValue = trim(textField.getText());
         PsiClass psiClass = javaFacade.findClass(fieldValue, scope);
         if(null != psiClass){
             pluginMainDialog.setSetterColor(Color.GREEN);
@@ -304,7 +307,8 @@ class GetterPsiClassFindKeyListner implements KeyListener{
     }
 
     private void performKeyHandling() {
-        String fieldValue = textField.getText();
+
+        String fieldValue = trim(textField.getText());
 
         PsiClass psiClass = javaFacade.findClass(fieldValue, scope);
         if(null != psiClass){

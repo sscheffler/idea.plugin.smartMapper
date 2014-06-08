@@ -7,5 +7,5 @@ import de.crawling.spider.idea.plugin.mapper.MapperProperties;
  */
 public interface SmartMapper {
 
-    public String buildmapperMethod(MapperProperties properties);
+    public String buildMapperMethod(MapperProperties properties);
 }

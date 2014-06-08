@@ -25,14 +25,11 @@ public class DefaultSmartMapperImpl implements SmartMapper{
 
     private RegexUtil regexUtil = new RegexUtil();
 
-    private String getMappingMethodForSelecionWithGetterClass(
-                                                    final String setterCanonicalClassName,
-                                                    final String getterCanonicalClassName,
-                                                    final List<PsiMethod> selectedMethods,
-                                                    final Project project,
-                                                    final boolean loadSuperClassMethods
-                                                    ){
+    private String getMappingMethodForSelecionWithGetterClass(MapperProperties mapperProperties){
         StringBuilder builder = new StringBuilder();
+        Project project = mapperProperties.getProject();
+        String setterCanonicalClassName  = mapperProperties.getSetterCanonicalClassName();
+        String getterCanonicalClassName  = mapperProperties.getGetterCanonicalClassName();
 
         String setterClassName = regexUtil.calculateClassName(setterCanonicalClassName);
         String getterClassName = regexUtil.calculateClassName(getterCanonicalClassName);
@@ -53,10 +50,10 @@ public class DefaultSmartMapperImpl implements SmartMapper{
         builder.append("public " + setterClassName +" mapTo"+ setterClassName+"("+ getterClassName + " " + getterVarName +"){\n");
         builder.append(setterClassName + " " + setterVarName + " = new " + setterClassName + "();\n");
 
-        for (PsiMethod setterMethod : selectedMethods) {
+        for (PsiMethod setterMethod : mapperProperties.getSelectedMethods()) {
             if(setterMethod.getName().startsWith("set")){
                 String setterName = setterMethod.getName();
-                String getterName = calculateGetter(getterClass,getterVarName, setterName, loadSuperClassMethods);
+                String getterName = calculateGetter(getterClass,getterVarName, setterName, mapperProperties.isLoadSuperClassMethods());
 
                 builder.append(setterVarName + "." + setterName + "( "+getterName+" );\n");
 
@@ -78,16 +75,15 @@ public class DefaultSmartMapperImpl implements SmartMapper{
 
     /**
      * returns a method strings which just contains the setter method calls of the selection
-     * @param setterCanonicalClassName
-     * @param selectedMethods
-     * @param project
+     * @param mapperProperties
      * @return
      */
-    private String getSimpleMappingMethodForSelecion(final String setterCanonicalClassName,
-                                         final List<PsiMethod> selectedMethods,
-                                         final Project project){
+    private String getSimpleMappingMethodForSelecion(MapperProperties mapperProperties){
 
         StringBuilder builder = new StringBuilder();
+        Project project = mapperProperties.getProject();
+        String setterCanonicalClassName  = mapperProperties.getSetterCanonicalClassName();
+
         String setterClassName = regexUtil.calculateClassName(setterCanonicalClassName);
         GlobalSearchScope scope = GlobalSearchScope.allScope(project);
         String setterVarName = regexUtil.calculateVariableName(setterCanonicalClassName);
@@ -97,7 +93,7 @@ public class DefaultSmartMapperImpl implements SmartMapper{
 
         if (validatePsiClassForNull(setterCanonicalClassName, setterClass)) return "";
 
-        if(selectedMethods.isEmpty()){
+        if(mapperProperties.getSelectedMethods().isEmpty()){
             return "";
         }
 
@@ -105,7 +101,7 @@ public class DefaultSmartMapperImpl implements SmartMapper{
         builder.append("public " + setterClassName +" mapTo"+ setterClassName+"(){\n");
         builder.append(setterClassName + " " + setterVarName + " = new " + setterClassName + "();\n");
 
-        for (PsiMethod setterMethod : selectedMethods) {
+        for (PsiMethod setterMethod : mapperProperties.getSelectedMethods()) {
             if(setterMethod.getName().startsWith("set")){
                 String setterName = setterMethod.getName();
 
@@ -149,7 +145,15 @@ public class DefaultSmartMapperImpl implements SmartMapper{
     }
 
     @Override
-    public String buildmapperMethod(MapperProperties properties) {
-        return null;
+    public String buildMapperMethod(final MapperProperties properties) {
+        String returnValue = "";
+        if(properties.propertiesValidForGetter()){
+            returnValue =  getMappingMethodForSelecionWithGetterClass(properties);
+        }else{
+            returnValue = getSimpleMappingMethodForSelecion(properties);
+        }
+
+
+        return returnValue;
     }
 }
