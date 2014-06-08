@@ -34,6 +34,7 @@ public class PluginMainDialog extends DialogWrapper {
     private PsiClass selectedSetterPsiClass;
     private PsiClass selectedGetterPsiClass;
     private JBList methodList;
+private Color originalTextFieldBackGroundColor;
 
 
     JPanel mainPanel;
@@ -60,6 +61,7 @@ public class PluginMainDialog extends DialogWrapper {
         methodList.setCellRenderer(new DefaultPsiElementCellRenderer());
         setterTextField = new JBTextField();
         getterTextField = new JBTextField();
+        originalTextFieldBackGroundColor = setterTextField.getBackground();
         mainPanel = new JPanel(new BorderLayout());
 
         //TODO: make dynamic
@@ -146,6 +148,18 @@ public class PluginMainDialog extends DialogWrapper {
         return selectedGetterPsiClass;
     }
 
+    public Color getOriginalTextFieldBackGroundColor() {
+        return originalTextFieldBackGroundColor;
+    }
+
+    public void setSetterColor(Color color){
+        setterTextField.setBackground(color);
+    }
+
+    public void setGetterColor(Color color){
+        getterTextField.setBackground(color);
+    }
+
 }
 
 class PsiMethodComparator implements Comparator<PsiMethod>{
@@ -211,16 +225,21 @@ class SetterPsiClassFindKeyListner implements KeyListener{
     private void performKeyHandling() {
         String fieldValue = textField.getText();
         PsiClass psiClass = javaFacade.findClass(fieldValue, scope);
-        if (null != psiClass && psiClass != pluginMainDialog.getSelectedSetterClass()) {
-            pluginMainDialog.setSelectedSetterClass(psiClass);
-            List<PsiMethod> sortedList = new SortedList<>(PsiMethodComparator.INSTANCE);
-            for (PsiMethod setterMethod : psiClass.getMethods()) {
+        if(null != psiClass){
+            pluginMainDialog.setSetterColor(Color.GREEN);
+            if (psiClass != pluginMainDialog.getSelectedSetterClass()) {
+                pluginMainDialog.setSelectedSetterClass(psiClass);
+                List<PsiMethod> sortedList = new SortedList<>(PsiMethodComparator.INSTANCE);
+                for (PsiMethod setterMethod : psiClass.getMethods()) {
 
-                if (setterMethod.getName().startsWith("set")) {
-                    sortedList.add(setterMethod);
+                    if (setterMethod.getName().startsWith("set")) {
+                        sortedList.add(setterMethod);
+                    }
                 }
+                methodModel.add(sortedList);
             }
-            methodModel.add(sortedList);
+        }else{
+            pluginMainDialog.setSetterColor(pluginMainDialog.getOriginalTextFieldBackGroundColor());
         }
     }
 
@@ -261,8 +280,14 @@ class GetterPsiClassFindKeyListner implements KeyListener{
         String fieldValue = textField.getText();
 
         PsiClass psiClass = javaFacade.findClass(fieldValue, scope);
-        if (null != psiClass && psiClass != pluginMainDialog.getSelectedGetterPsiClass()) {
-            pluginMainDialog.setSelectedGetterClass(psiClass);
+        if(null != psiClass){
+            pluginMainDialog.setGetterColor(Color.GREEN);
+
+            if (psiClass != pluginMainDialog.getSelectedGetterPsiClass()) {
+                pluginMainDialog.setSelectedGetterClass(psiClass);
+            }
+        }else{
+            pluginMainDialog.setGetterColor(pluginMainDialog.getOriginalTextFieldBackGroundColor());
         }
     }
 
