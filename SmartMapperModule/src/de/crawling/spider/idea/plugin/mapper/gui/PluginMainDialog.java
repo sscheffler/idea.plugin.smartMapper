@@ -8,6 +8,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.ui.CollectionListModel;
 import com.intellij.ui.ToolbarDecorator;
+import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.containers.SortedList;
@@ -40,6 +41,7 @@ private Color originalTextFieldBackGroundColor;
     JPanel mainPanel;
     JBTextField setterTextField;
     JBTextField getterTextField;
+    JBCheckBox loadSuperClassGetterMethods;
 
     public PluginMainDialog(@Nullable Project project) {
         super(project);
@@ -61,6 +63,7 @@ private Color originalTextFieldBackGroundColor;
         methodList.setCellRenderer(new DefaultPsiElementCellRenderer());
         setterTextField = new JBTextField();
         getterTextField = new JBTextField();
+        loadSuperClassGetterMethods = new JBCheckBox("super", Boolean.TRUE);
         originalTextFieldBackGroundColor = setterTextField.getBackground();
         mainPanel = new JPanel(new BorderLayout());
 
@@ -78,6 +81,7 @@ private Color originalTextFieldBackGroundColor;
 
         northPanel.add(LabeledComponent.create(setterTextField, "setterClass:"));
         northPanel.add(LabeledComponent.create(getterTextField, "getterClass:"));
+        northPanel.add(loadSuperClassGetterMethods);
 
         methodListMainPanel.add(northPanel, BorderLayout.NORTH);
         methodListMainPanel.add(methodListSubPanel, BorderLayout.CENTER);
@@ -122,7 +126,9 @@ private Color originalTextFieldBackGroundColor;
         return returnList;
     }
 
-
+    public boolean isSuperClassMapping(){
+        return this.loadSuperClassGetterMethods.isSelected();
+    }
 
     public String getCannonicalSetterClassName(){
         return setterTextField.getText();

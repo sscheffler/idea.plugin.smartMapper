@@ -32,15 +32,13 @@ public class SmartMapperEditorPopupAction extends AnAction {
             PluginMainDialog dialog = new PluginMainDialog(project);
             dialog.show();
             if(dialog.isOK() && null != dialog.getSelectedSetterClass()){
-                PsiClass getterClass = dialog.getSelectedGetterPsiClass();
                 updater = new Updater(project);
-                List<PsiMethod> methods = dialog.getSelectedSetterMethods();
-
-                String methodString = smartMapper.getSimpleMappingMethodForSelecion(
-                        dialog.getCannonicalSetterClassName(),
-                        methods,
-                        project
-                );
+                String methodString = "";
+                if(null == dialog.getSelectedGetterPsiClass()){
+                    methodString = buildSimpleMethodString(project, dialog);
+                }else{
+                    methodString = buildMethodStringWithMapping(project, dialog);
+                }
 
                 if(isNotBlank(methodString)) {
                     updater.updateClassWithCreatingNewMethod(methodString, dialog.getSelectedSetterClass());
@@ -54,6 +52,27 @@ public class SmartMapperEditorPopupAction extends AnAction {
         }
     }
 
+    private String buildSimpleMethodString(final Project project, final PluginMainDialog dialog) {
+        List<PsiMethod> methods = dialog.getSelectedSetterMethods();
+
+        return smartMapper.getSimpleMappingMethodForSelecion(
+                dialog.getCannonicalSetterClassName(),
+                methods,
+                project
+        );
+    }
+
+    private String buildMethodStringWithMapping(final Project project, final PluginMainDialog dialog) {
+        List<PsiMethod> methods = dialog.getSelectedSetterMethods();
+
+        return smartMapper.getMappingMethodForSelecionWithGetterClass(
+                dialog.getCannonicalSetterClassName(),
+                dialog.getCannonicalGetterClassName(),
+                methods,
+                project,
+                dialog.isSuperClassMapping()
+        );
+    }
 
 
     private PsiClass getPsiClass(AnActionEvent e){

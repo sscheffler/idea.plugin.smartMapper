@@ -54,7 +54,64 @@ public class SmartMapper {
 
     }
 
+    public String getMappingMethodForSelecionWithGetterClass(
+                                                    final String setterCanonicalClassName,
+                                                    final String getterCanonicalClassName,
+                                                    final List<PsiMethod> selectedMethods,
+                                                    final Project project,
+                                                    final boolean loadSuperClassMethods
+                                                    ){
+        StringBuilder builder = new StringBuilder();
 
+        String setterClassName = regexUtil.calculateClassName(setterCanonicalClassName);
+        String getterClassName = regexUtil.calculateClassName(getterCanonicalClassName);
+        GlobalSearchScope scope = GlobalSearchScope.allScope(project);
+
+        String setterVarName = regexUtil.calculateVariableName(setterCanonicalClassName);
+        String getterVarName = regexUtil.calculateVariableName(getterCanonicalClassName);
+
+        PsiClass setterClass = JavaPsiFacade.getInstance(project).findClass(setterCanonicalClassName, scope);
+        PsiClass getterClass = JavaPsiFacade.getInstance(project).findClass(getterCanonicalClassName, scope);
+
+        if (validatePsiClassForNull(setterCanonicalClassName, setterClass)) return "";
+
+        if (validatePsiClassForNull(setterCanonicalClassName, getterClass)) return "";
+
+        getterClassName = (isBlank(getterClassName))?"":"final "+ getterClassName;
+
+        builder.append("public " + setterClassName +" mapTo"+ setterClassName+"("+ getterClassName + " " + getterVarName +"){\n");
+        builder.append(setterClassName + " " + setterVarName + " = new " + setterClassName + "();\n");
+
+        for (PsiMethod setterMethod : selectedMethods) {
+            if(setterMethod.getName().startsWith("set")){
+                String setterName = setterMethod.getName();
+                String getterName = calculateGetter(getterClass,getterVarName, setterName, loadSuperClassMethods);
+
+                builder.append(setterVarName + "." + setterName + "( "+getterName+" );\n");
+
+            }
+        }
+        builder.append("return "+setterVarName+";\n}");
+
+        return builder.toString();
+    }
+
+    private boolean validatePsiClassForNull(String className, PsiClass psiClass) {
+        if(null == psiClass){
+            JOptionPane.showMessageDialog(null, "ClassName: " + className + " not known", "Input Failure", JOptionPane.ERROR_MESSAGE);
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * returns a method strings which just contains the setter method calls of the selection
+     * @param setterCanonicalClassName
+     * @param selectedMethods
+     * @param project
+     * @return
+     */
     public String getSimpleMappingMethodForSelecion(final String setterCanonicalClassName,
                                          final List<PsiMethod> selectedMethods,
                                          final Project project){
@@ -67,10 +124,7 @@ public class SmartMapper {
         //Error Handling
         PsiClass setterClass = JavaPsiFacade.getInstance(project).findClass(setterCanonicalClassName, scope);
 
-        if(null == setterClass){
-            JOptionPane.showMessageDialog(null, "ClassName: " + setterCanonicalClassName+" not known", "Input Failure" , JOptionPane.ERROR_MESSAGE);
-            return "";
-        }
+        if (validatePsiClassForNull(setterCanonicalClassName, setterClass)) return "";
 
         if(selectedMethods.isEmpty()){
             return "";
@@ -94,6 +148,7 @@ public class SmartMapper {
 
     }
 
+    @Deprecated
     public String getMappingMethod(
             final Project project,
             final String setterCanonicalClassName,
@@ -109,10 +164,7 @@ public class SmartMapper {
         PsiClass setterClass = JavaPsiFacade.getInstance(project).findClass(setterCanonicalClassName, scope);
         PsiClass getterClass = JavaPsiFacade.getInstance(project).findClass(getterCanonicalClassName, scope);
 
-        if(null == setterClass){
-            JOptionPane.showMessageDialog(null, "ClassName: " + setterCanonicalClassName+" not known", "Input Failure" , JOptionPane.ERROR_MESSAGE);
-            return "";
-        }
+        if (validatePsiClassForNull(setterCanonicalClassName, setterClass)) return "";
 
         StringBuilder builder = new StringBuilder();
 
