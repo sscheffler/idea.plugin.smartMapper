@@ -52,7 +52,7 @@ public class DefaultSmartMapperImpl implements SmartMapper{
 
         getterClassName = (isBlank(getterClassName))?"":"final "+ getterClassName;
 
-        String methodName = mapperHelper.retrieveMethodName(MAPPER_METHOD_PREFIX,setterClassName, mapperProperties.getEditorClass());
+        String methodName = mapperHelper.retrieveMethodName(mapperProperties);
 
         builder.append("public " + setterClassName +" " +methodName+"("+ getterClassName + " " + getterVarName +"){\n");
         builder.append(setterClassName + " " + setterVarName + " = new " + setterClassName + "();\n");

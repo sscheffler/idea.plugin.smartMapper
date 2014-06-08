@@ -5,6 +5,7 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
+import de.crawling.spider.idea.plugin.mapper.produce.MethodNameProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +18,7 @@ public class MapperHelper {
 
     public final static MapperHelper INSTANCE = new MapperHelper();
     private RegexUtil regexUtil = RegexUtil.INSTANCE;
+    private MethodNameProducer methodNameProducer = MethodNameProducer.INSTANCE;
 
     protected MapperHelper(){
 
@@ -40,14 +42,11 @@ public class MapperHelper {
         }
     }
 
-    public String retrieveMethodName(String mapperMethodPrefix, String methodName, PsiClass editorClass) throws IllegalArgumentException{
-//        mapTo"+ setterClassName
-        if(null == editorClass){
+    public String retrieveMethodName(MapperProperties mapperProperties) throws IllegalArgumentException{
+        if(null == mapperProperties.getEditorClass()){
             throw new IllegalArgumentException("Editor class could not be resolved");
         }
 
-        List<PsiMethod> setterMethodList = regexUtil.findAllMethodsWithIndex(mapperMethodPrefix, methodName, editorClass);
-
-        return null;
+        return methodNameProducer.produceMethodName(mapperProperties);
     }
 }
