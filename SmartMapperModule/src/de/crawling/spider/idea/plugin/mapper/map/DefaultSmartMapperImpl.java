@@ -1,4 +1,4 @@
-package de.crawling.spider.idea.plugin.mapper;
+package de.crawling.spider.idea.plugin.mapper.map;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
@@ -6,6 +6,8 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.search.GlobalSearchScope;
+import de.crawling.spider.idea.plugin.mapper.MapperProperties;
+import de.crawling.spider.idea.plugin.mapper.RegexUtil;
 import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
@@ -19,7 +21,7 @@ import static org.apache.commons.lang.StringUtils.*;
 /**
  * Created by sscheffler on 25.05.14.
  */
-public class SmartMapper {
+public class DefaultSmartMapperImpl implements SmartMapper{
 
     public RegexUtil regexUtil = new RegexUtil();
 
@@ -175,5 +177,10 @@ public class SmartMapper {
 
         }
         return getterName;
+    }
+
+    @Override
+    public String buildmapperMethod(MapperProperties properties) {
+        return null;
     }
 }

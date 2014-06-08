@@ -8,6 +8,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import de.crawling.spider.idea.plugin.mapper.gui.PluginMainDialog;
+import de.crawling.spider.idea.plugin.mapper.map.DefaultSmartMapperImpl;
 
 import javax.swing.*;
 import java.util.List;
@@ -19,7 +20,7 @@ import static org.apache.commons.lang.StringUtils.isNotBlank;
  */
 public class SmartMapperEditorPopupAction extends AnAction {
 
-    private final SmartMapper smartMapper = new SmartMapper();
+    private final DefaultSmartMapperImpl smartMapper = new DefaultSmartMapperImpl();
     private Updater updater;
 
     public void actionPerformed(AnActionEvent e) {
@@ -31,7 +32,8 @@ public class SmartMapperEditorPopupAction extends AnAction {
             final Project project = e.getProject();
             PluginMainDialog dialog = new PluginMainDialog(project);
             dialog.show();
-            if(dialog.isOK() && null != dialog.getSelectedSetterClass()){
+            MapperProperties properties = dialog.getMapperProperties();
+            if(dialog.isOK() && properties.propertiesValid()){
                 updater = new Updater(project);
                 String methodString = "";
                 if(null == dialog.getSelectedGetterPsiClass()){
