@@ -9,6 +9,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import de.crawling.spider.idea.plugin.mapper.gui.PluginMainDialog;
 import de.crawling.spider.idea.plugin.mapper.map.DefaultSmartMapperImpl;
+import de.crawling.spider.idea.plugin.mapper.map.SmartMapper;
 
 import javax.swing.*;
 import java.util.List;
@@ -20,8 +21,8 @@ import static org.apache.commons.lang.StringUtils.isNotBlank;
  */
 public class SmartMapperEditorPopupAction extends AnAction {
 
-    private final DefaultSmartMapperImpl smartMapper = new DefaultSmartMapperImpl();
     private Updater updater;
+    private SmartMapper smartMapper = new DefaultSmartMapperImpl();
 
     public void actionPerformed(AnActionEvent e) {
         startMainDialog(e);
@@ -35,12 +36,8 @@ public class SmartMapperEditorPopupAction extends AnAction {
             MapperProperties properties = dialog.getMapperProperties();
             if(dialog.isOK() && properties.propertiesValid()){
                 updater = new Updater(project);
-                String methodString = "";
-                if(null == dialog.getSelectedGetterPsiClass()){
-                    methodString = buildSimpleMethodString(project, dialog);
-                }else{
-                    methodString = buildMethodStringWithMapping(project, dialog);
-                }
+
+                String methodString = smartMapper.buildmapperMethod(properties);
 
                 if(isNotBlank(methodString)) {
                     updater.updateClassWithCreatingNewMethod(methodString, dialog.getSelectedSetterClass());
@@ -54,7 +51,7 @@ public class SmartMapperEditorPopupAction extends AnAction {
         }
     }
 
-    private String buildSimpleMethodString(final Project project, final PluginMainDialog dialog) {
+    /*private String buildSimpleMethodString(final Project project, final PluginMainDialog dialog) {
         List<PsiMethod> methods = dialog.getSelectedSetterMethods();
 
         return smartMapper.getSimpleMappingMethodForSelecion(
@@ -74,7 +71,7 @@ public class SmartMapperEditorPopupAction extends AnAction {
                 project,
                 dialog.isSuperClassMapping()
         );
-    }
+    }*/
 
 
     private PsiClass getPsiClass(AnActionEvent e){

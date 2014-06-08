@@ -23,40 +23,9 @@ import static org.apache.commons.lang.StringUtils.*;
  */
 public class DefaultSmartMapperImpl implements SmartMapper{
 
-    public RegexUtil regexUtil = new RegexUtil();
+    private RegexUtil regexUtil = new RegexUtil();
 
-    /**
-     * Uses reflection to get setter methods
-     * @param className
-     * @param varName
-     * @return
-     */
-    @Deprecated
-    public String getAllSetterMethodsForClass(String className, String varName) {
-
-        StringBuilder builder = new StringBuilder();
-        try {
-
-            Class setterClass = Class.forName(className);
-
-            Method[] methods = setterClass.getMethods();
-            String objectName = setterClass.getCanonicalName();
-
-            builder.append(objectName + " " + varName + " = new " + objectName + "();\n");
-
-            for (Method method : methods) {
-                if (method.getName().startsWith("set"))
-                    builder.append(varName + "." + method.getName() + "(value);\n");
-            }
-
-        } catch (ClassNotFoundException c) {
-            JOptionPane.showMessageDialog(null, "Class '" + className + "' not found!!!", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        return builder.toString();
-
-    }
-
-    public String getMappingMethodForSelecionWithGetterClass(
+    private String getMappingMethodForSelecionWithGetterClass(
                                                     final String setterCanonicalClassName,
                                                     final String getterCanonicalClassName,
                                                     final List<PsiMethod> selectedMethods,
@@ -114,7 +83,7 @@ public class DefaultSmartMapperImpl implements SmartMapper{
      * @param project
      * @return
      */
-    public String getSimpleMappingMethodForSelecion(final String setterCanonicalClassName,
+    private String getSimpleMappingMethodForSelecion(final String setterCanonicalClassName,
                                          final List<PsiMethod> selectedMethods,
                                          final Project project){
 
