@@ -43,8 +43,6 @@ public class MethodNameProducerTest extends TestHelper{
         methods = createInputMethodTestData();
         retrieveMethods = createOutputMethodTestData();
 
-        when(editorClassMock.getName()).thenReturn(METHOD_NAME);
-
         when(editorClassMock.getMethods()).thenReturn(methods);
         when(regexUtilMock.findAllMethodsWithIndex(SET_PREFIX, METHOD_NAME, editorClassMock)).thenReturn(retrieveMethods);
 
@@ -60,6 +58,7 @@ public class MethodNameProducerTest extends TestHelper{
     public final void testCreateMethodName() {
         MapperProperties propertiesMock = mock(MapperProperties.class);
         when(propertiesMock.getMapperMethodPrefix()).thenReturn(SET_PREFIX);
+        when(propertiesMock.getSetterCanonicalClassName()).thenReturn(METHOD_NAME);
         when(propertiesMock.getEditorClass()).thenReturn(editorClassMock);
 
         String toTest = methodNameProducer.produceMethodName(propertiesMock);
