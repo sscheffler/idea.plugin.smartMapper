@@ -25,8 +25,8 @@ import static org.apache.commons.lang.StringUtils.*;
  */
 public class DefaultSmartMapperImpl implements SmartMapper{
 
-    private RegexUtil regexUtil = new RegexUtil();
-    private static Logger LOGGER = LoggerFactory.getLogger(DefaultSmartMapperImpl.class);
+    private final RegexUtil regexUtil = new RegexUtil();
+    private final static Logger LOGGER = LoggerFactory.getLogger(DefaultSmartMapperImpl.class);
 
     private String getMappingMethodForSelecionWithGetterClass(MapperProperties mapperProperties){
         StringBuilder builder = new StringBuilder();
@@ -153,7 +153,7 @@ public class DefaultSmartMapperImpl implements SmartMapper{
     public String buildMapperMethod(final MapperProperties properties) {
         String returnValue = "";
         if(properties.propertiesValidForGetter()){
-            LOGGER.info("Mapping with getter methods was performed");
+            LOGGER.debug("Mapping with getter methods was performed");
             returnValue =  getMappingMethodForSelecionWithGetterClass(properties);
 
         }else{
