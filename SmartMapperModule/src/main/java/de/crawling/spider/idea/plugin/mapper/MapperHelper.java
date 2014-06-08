@@ -24,14 +24,17 @@ public class MapperHelper {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(MapperHelper.class);
 
-    public PsiClass getEditorClass(AnActionEvent e) throws IllegalArgumentException{
+    public PsiClass retrieveEditorClass(AnActionEvent e) throws IllegalArgumentException{
         PsiFile psiFile = e.getData(LangDataKeys.PSI_FILE);
         if(psiFile instanceof PsiJavaFile){
             Editor editor = e.getData(LangDataKeys.EDITOR);
 
             int cursorPostion = editor.getCaretModel().getOffset();
             PsiElement psiElement = psiFile.findElementAt(cursorPostion);
-            return PsiTreeUtil.getParentOfType(psiElement, PsiClass.class);
+            PsiClass returnValue = PsiTreeUtil.getParentOfType(psiElement, PsiClass.class);
+
+            LOGGER.debug("found editorclass: {}", returnValue);
+            return returnValue;
         }else{
             throw new IllegalArgumentException("selected file '"+psiFile.getName()+"' is no java file!");
         }
