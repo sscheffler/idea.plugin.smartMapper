@@ -148,47 +148,6 @@ public class SmartMapper {
 
     }
 
-    @Deprecated
-    public String getMappingMethod(
-            final Project project,
-            final String setterCanonicalClassName,
-            final String setterVarName,
-            final String getterCanonicalClassName,
-            final String getterVarName,
-            final boolean loadSuperClassMethods) {
-
-        String setterClassName = regexUtil.calculateClassName(setterCanonicalClassName);
-        String getterClassName = regexUtil.calculateClassName(getterCanonicalClassName);
-
-        GlobalSearchScope scope = GlobalSearchScope.allScope(project);
-        PsiClass setterClass = JavaPsiFacade.getInstance(project).findClass(setterCanonicalClassName, scope);
-        PsiClass getterClass = JavaPsiFacade.getInstance(project).findClass(getterCanonicalClassName, scope);
-
-        if (validatePsiClassForNull(setterCanonicalClassName, setterClass)) return "";
-
-        StringBuilder builder = new StringBuilder();
-
-        getterClassName = (isBlank(getterClassName))?"":"final "+ getterClassName;
-
-        builder.append("public " + setterClassName +" mapTo"+ setterClassName+"("+ getterClassName + " " + getterVarName +"){\n");
-        builder.append(setterClassName + " " + setterVarName + " = new " + setterClassName + "();\n");
-
-        for (PsiMethod setterMethod : setterClass.getMethods()) {
-            if(setterMethod.getName().startsWith("set")){
-                String setterName = setterMethod.getName();
-                String getterName = calculateGetter(getterClass,getterVarName, setterName, loadSuperClassMethods);
-
-                builder.append(setterVarName + "." + setterName + "( "+getterName+" );\n");
-
-            }
-        }
-
-        builder.append("return "+setterVarName+";\n}");
-        return builder.toString();
-    }
-
-
-
     private String calculateGetter(final PsiClass getterClass,final String getterVarName, final String setterName, final boolean loadSuperClassMethods) {
         String getterName = "";
 
