@@ -6,6 +6,7 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.search.GlobalSearchScope;
+import de.crawling.spider.idea.plugin.mapper.MapperHelper;
 import de.crawling.spider.idea.plugin.mapper.MapperProperties;
 import de.crawling.spider.idea.plugin.mapper.RegexUtil;
 import org.apache.commons.lang.StringUtils;
@@ -26,8 +27,14 @@ import static org.apache.commons.lang.StringUtils.*;
 public class DefaultSmartMapperImpl implements SmartMapper{
 
     private final RegexUtil regexUtil = new RegexUtil();
+    private final MapperHelper mapperHelper = new MapperHelper();
     private final static Logger LOGGER = LoggerFactory.getLogger(DefaultSmartMapperImpl.class);
 
+    /**
+     * creates a method String and tries to map getter methods in setter methods
+     * @param mapperProperties
+     * @return
+     */
     private String getMappingMethodForSelecionWithGetterClass(MapperProperties mapperProperties){
         StringBuilder builder = new StringBuilder();
         Project project = mapperProperties.getProject();
@@ -49,6 +56,8 @@ public class DefaultSmartMapperImpl implements SmartMapper{
         if (validatePsiClassForNull(setterCanonicalClassName, getterClass)) return "";
 
         getterClassName = (isBlank(getterClassName))?"":"final "+ getterClassName;
+
+//        String methodName = mapperHelper.retrieveMethodName(setter)
 
         builder.append("public " + setterClassName +" mapTo"+ setterClassName+"("+ getterClassName + " " + getterVarName +"){\n");
         builder.append(setterClassName + " " + setterVarName + " = new " + setterClassName + "();\n");

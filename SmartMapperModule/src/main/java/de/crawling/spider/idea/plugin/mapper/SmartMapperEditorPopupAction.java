@@ -53,8 +53,7 @@ public class SmartMapperEditorPopupAction extends AnAction {
         }
     }
 
-
-    private PsiClass getPsiClass(AnActionEvent e){
+    public PsiClass getEditorClass(AnActionEvent e){
         PsiFile psiFile = e.getData(LangDataKeys.PSI_FILE);
         Editor editor = e.getData(LangDataKeys.EDITOR);
 
@@ -62,8 +61,5 @@ public class SmartMapperEditorPopupAction extends AnAction {
         PsiElement psiElement = psiFile.findElementAt(cursorPostion);
         return PsiTreeUtil.getParentOfType(psiElement, PsiClass.class);
     }
-
-
-
 
 }

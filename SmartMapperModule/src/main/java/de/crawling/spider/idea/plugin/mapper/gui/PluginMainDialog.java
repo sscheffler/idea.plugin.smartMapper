@@ -11,20 +11,14 @@ import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBTextField;
-import com.intellij.util.containers.SortedList;
 import de.crawling.spider.idea.plugin.mapper.MapperProperties;
-import org.apache.commons.lang.StringUtils;
+import de.crawling.spider.idea.plugin.mapper.gui.listeners.GetterPsiClassFindKeyListner;
+import de.crawling.spider.idea.plugin.mapper.gui.listeners.SetterPsiClassFindKeyListner;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.*;
-import java.util.List;
-
-import static org.apache.commons.lang.StringUtils.*;
 
 /**
  * Created by sscheffler on 07.06.14.
@@ -109,6 +103,7 @@ public class PluginMainDialog extends DialogWrapper {
 
 
     public void addKeyListenerToTextFields(){
+
         setterTextField.addKeyListener(new SetterPsiClassFindKeyListner(this, setterTextField, methodModel, scope, javaFacade));
         getterTextField.addKeyListener(new GetterPsiClassFindKeyListner(this, getterTextField, scope, javaFacade));
     }
@@ -193,134 +188,3 @@ public class PluginMainDialog extends DialogWrapper {
 
 }
 
-class PsiMethodComparator implements Comparator<PsiMethod>{
-
-    public static final PsiMethodComparator INSTANCE  = new PsiMethodComparator();
-
-
-
-
-    private PsiMethodComparator() {
-    }
-
-    @Override
-    public int compare(PsiMethod o1, PsiMethod o2) {
-        if (o1.getName() == null && o2.getName() == null) {
-            return 0;
-        }
-        if (o2.getName() == null) {
-            return 1;
-        }
-        if (o1.getName() == null) {
-            return -1;
-        }
-        return o1.getName().compareTo(o2.getName());
-    }
-
-
-}
-
-class SetterPsiClassFindKeyListner implements KeyListener{
-
-    private JBTextField textField;
-    private CollectionListModel<PsiMethod> methodModel;
-    private GlobalSearchScope scope;
-    private JavaPsiFacade javaFacade;
-    private PluginMainDialog pluginMainDialog;
-
-    SetterPsiClassFindKeyListner(PluginMainDialog pluginMainDialog, JBTextField textField, CollectionListModel<PsiMethod> methodModel, GlobalSearchScope scope, JavaPsiFacade javaFacade) {
-        this.pluginMainDialog = pluginMainDialog;
-        this.textField = textField;
-        this.methodModel = methodModel;
-        this.scope = scope;
-        this.javaFacade = javaFacade;
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-        performKeyHandling();
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        performKeyHandling();
-
-
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        performKeyHandling();
-    }
-
-    private void performKeyHandling() {
-        String fieldValue = trim(textField.getText());
-        PsiClass psiClass = javaFacade.findClass(fieldValue, scope);
-        if(null != psiClass){
-            pluginMainDialog.setSetterColor(Color.GREEN);
-            if (psiClass != pluginMainDialog.getSelectedSetterClass()) {
-                pluginMainDialog.setSelectedSetterClass(psiClass);
-                List<PsiMethod> sortedList = new SortedList<>(PsiMethodComparator.INSTANCE);
-                for (PsiMethod setterMethod : psiClass.getMethods()) {
-
-                    if (setterMethod.getName().startsWith("set")) {
-                        sortedList.add(setterMethod);
-                    }
-                }
-                methodModel.add(sortedList);
-            }
-        }else{
-            pluginMainDialog.setSetterColor(pluginMainDialog.getOriginalTextFieldBackGroundColor());
-        }
-    }
-
-}
-
-class GetterPsiClassFindKeyListner implements KeyListener{
-
-    private JBTextField textField;
-    private GlobalSearchScope scope;
-    private JavaPsiFacade javaFacade;
-    private PluginMainDialog pluginMainDialog;
-
-    GetterPsiClassFindKeyListner(PluginMainDialog pluginMainDialog, JBTextField textField, GlobalSearchScope scope, JavaPsiFacade javaFacade) {
-        this.pluginMainDialog = pluginMainDialog;
-        this.textField = textField;
-        this.scope = scope;
-        this.javaFacade = javaFacade;
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-        performKeyHandling();
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        performKeyHandling();
-
-
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        performKeyHandling();
-    }
-
-    private void performKeyHandling() {
-
-        String fieldValue = trim(textField.getText());
-
-        PsiClass psiClass = javaFacade.findClass(fieldValue, scope);
-        if(null != psiClass){
-            pluginMainDialog.setGetterColor(Color.GREEN);
-
-            if (psiClass != pluginMainDialog.getSelectedGetterPsiClass()) {
-                pluginMainDialog.setSelectedGetterClass(psiClass);
-            }
-        }else{
-            pluginMainDialog.setGetterColor(pluginMainDialog.getOriginalTextFieldBackGroundColor());
-        }
-    }
-
-}
