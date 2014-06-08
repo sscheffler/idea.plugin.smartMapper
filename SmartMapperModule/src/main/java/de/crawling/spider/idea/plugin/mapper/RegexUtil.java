@@ -1,6 +1,7 @@
 package de.crawling.spider.idea.plugin.mapper;
 
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiMethod;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.Collections;
@@ -65,7 +66,7 @@ public class RegexUtil {
     }
 
 
-    public List<String> findAllMethodsWithIndex(String mapperMethodPrefix, String methodName, PsiClass editorClass) {
+    public List<PsiMethod> findAllMethodsWithIndex(String mapperMethodPrefix, String methodName, PsiClass editorClass) {
         if(isBlank(methodName) || null == editorClass){
             return Collections.emptyList();
         }

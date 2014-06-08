@@ -3,10 +3,7 @@ package de.crawling.spider.idea.plugin.mapper;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiJavaFile;
+import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +46,7 @@ public class MapperHelper {
             throw new IllegalArgumentException("Editor class could not be resolved");
         }
 
-        List<String> setterMethodList = regexUtil.findAllMethodsWithIndex(mapperMethodPrefix, methodName, editorClass);
+        List<PsiMethod> setterMethodList = regexUtil.findAllMethodsWithIndex(mapperMethodPrefix, methodName, editorClass);
 
         return null;
     }
