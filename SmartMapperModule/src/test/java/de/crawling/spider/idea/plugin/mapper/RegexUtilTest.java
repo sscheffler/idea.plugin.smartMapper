@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
  * @author sscheffler(stefan-scheffler@web.de)
  * @date 08.06.14
  */
-public class RegexUtilTest {
+public class RegexUtilTest extends TestHelper{
 
     public static final String CANONICAL_CLASS_TEXT = "de.foo.Bar";
     private RegexUtil regexUtil = RegexUtil.INSTANCE;
@@ -102,24 +102,5 @@ public class RegexUtilTest {
         }
     }
 
-    private PsiMethod[] createMethodTestData() {
-        PsiMethod[] methods = new PsiMethod[4];
 
-        PsiMethod m0 = mock(PsiMethod.class);
-        when(m0.getName()).thenReturn("setMethod");
-        methods[0] = m0;
-
-        PsiMethod m1 = mock(PsiMethod.class);
-        when(m1.getName()).thenReturn("setMethod1");
-        methods[1] = m1;
-
-        PsiMethod m2 = mock(PsiMethod.class);
-        when(m2.getName()).thenReturn("setMethod2");
-        methods[2] = m2;
-
-        PsiMethod m3 = mock(PsiMethod.class);
-        when(m3.getName()).thenReturn("setDoNotReturn");
-        methods[3] = m3;
-        return methods;
-    }
 }
