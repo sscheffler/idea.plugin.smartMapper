@@ -94,4 +94,9 @@ public class RegexUtil {
 
         return relevantMethods;
     }
+
+
+    public int getIncrementIndex(List<PsiMethod> testData) {
+        return 0;
+    }
 }

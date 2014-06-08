@@ -102,5 +102,19 @@ public class RegexUtilTest extends TestHelper{
         }
     }
 
+    /**
+    * tests if the new index of a List is calculated correctly
+    *
+    * @author sscheffler
+    * @date 08.06.14
+    */
+    @Test
+    public final void testGetIncrementIndex() {
+        List<PsiMethod> testData = createOutputMethodTestData();
+        int toTest = regexUtil.getIncrementIndex(testData);
+        assertEquals(3, toTest);
+
+    }
+
 
 }
