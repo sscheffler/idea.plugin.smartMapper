@@ -23,6 +23,9 @@ public class MapperProperties {
 
     private String setterCanonicalClassName;
     private String getterCanonicalClassName;
+    private String mapperMethodPrefix="mapTo";
+
+
     private List<PsiMethod> selectedMethods;
     private Project project;
     private boolean loadSuperClassMethods;
@@ -106,5 +109,13 @@ public class MapperProperties {
 
     public void setEditorClass(PsiClass editorClass) {
         this.editorClass = editorClass;
+    }
+
+    public String getMapperMethodPrefix() {
+        return mapperMethodPrefix;
+    }
+
+    public void setMapperMethodPrefix(String mapperMethodPrefix) {
+        this.mapperMethodPrefix = mapperMethodPrefix;
     }
 }

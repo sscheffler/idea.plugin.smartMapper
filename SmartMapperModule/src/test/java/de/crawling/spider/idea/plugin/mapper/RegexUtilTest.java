@@ -87,7 +87,7 @@ public class RegexUtilTest extends TestHelper{
     */
     @Test
     public final void testFindAllMethodsSuccess() {
-        PsiMethod[] methods = createMethodTestData();
+        PsiMethod[] methods = createInputMethodTestData();
         PsiClass psiClass = mock(PsiClass.class);
 
         when(psiClass.getMethods()).thenReturn(methods);
