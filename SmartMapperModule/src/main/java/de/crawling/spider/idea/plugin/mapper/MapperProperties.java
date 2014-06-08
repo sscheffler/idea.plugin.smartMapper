@@ -28,6 +28,8 @@ public class MapperProperties {
     private boolean loadSuperClassMethods;
     private boolean defaultValues;
 
+    private PsiClass editorClass;
+
     public MapperProperties(String setterCanonicalClassName, String getterCanonicalClassName, List<PsiMethod> selectedMethods, Project project, boolean loadSuperClassMethods, boolean defaultValues) {
         this.setterCanonicalClassName = setterCanonicalClassName;
         this.getterCanonicalClassName = getterCanonicalClassName;
@@ -98,7 +100,11 @@ public class MapperProperties {
     }
 
 
+    public PsiClass getEditorClass() {
+        return editorClass;
+    }
 
-
-
+    public void setEditorClass(PsiClass editorClass) {
+        this.editorClass = editorClass;
+    }
 }
