@@ -2,10 +2,13 @@ package de.crawling.spider.idea.plugin.mapper.util;
 
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
+import com.intellij.util.containers.SortedList;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -22,6 +25,7 @@ public class RegexUtil {
 
     public static final RegexUtil INSTANCE = new RegexUtil();
     private final static Logger LOGGER = LoggerFactory.getLogger(RegexUtil.class);
+    public static final String EXTRACT_METHOD_INDEX_PATTERN = "^[^\\d]*(\\d*)";
 
     private RegexUtil() {
     }
@@ -58,13 +62,7 @@ public class RegexUtil {
         if(isBlank(canonicalText)){
             return "";
         }
-        Pattern p = Pattern.compile(EXTRACT_CLASS_NAME_PATTERN);
-        Matcher m = p.matcher(canonicalText);
-        boolean classNameFound = m.find();
-        String className="";
-        if(classNameFound) {
-            className = m.group(1);
-        }
+        String className = extractFirstGroup(canonicalText, EXTRACT_CLASS_NAME_PATTERN);
         return className;
     }
 
@@ -96,7 +94,35 @@ public class RegexUtil {
     }
 
 
-    public int getIncrementIndex(List<PsiMethod> testData) {
-        return 0;
+    public int getIncrementIndex(List<PsiMethod> methods) {
+//        SortedList<Integer> list = new SortedList<>();
+        List<Integer> resultList = new ArrayList<Integer>();
+
+        for(PsiMethod method : methods){
+
+            String index = extractFirstGroup(method.getName(), EXTRACT_METHOD_INDEX_PATTERN);
+            Integer val = (isBlank(index))? 0:Integer.valueOf(index);
+            resultList.add(val);
+        }
+
+        Integer[] integerArray = new Integer[resultList.size()];
+        resultList.toArray(integerArray);
+
+        Arrays.sort(integerArray);
+
+        int nextIndex = integerArray[resultList.size()-1]+1;
+
+        return nextIndex;
+    }
+
+    private String extractFirstGroup(String text, String pattern) {
+        Pattern p = Pattern.compile(pattern);
+        Matcher m = p.matcher(text);
+        boolean classNameFound = m.find();
+        String className="";
+        if(classNameFound) {
+            className = m.group(1);
+        }
+        return className;
     }
 }

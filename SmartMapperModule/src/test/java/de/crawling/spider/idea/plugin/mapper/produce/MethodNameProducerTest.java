@@ -15,6 +15,8 @@ import org.mockito.MockitoAnnotations;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -45,6 +47,7 @@ public class MethodNameProducerTest extends TestHelper{
 
         when(editorClassMock.getMethods()).thenReturn(methods);
         when(regexUtilMock.findAllMethodsWithIndex(SET_PREFIX, METHOD_NAME, editorClassMock)).thenReturn(retrieveMethods);
+        when(regexUtilMock.calculateClassName(METHOD_NAME)).thenReturn(METHOD_NAME);
 
     }
 

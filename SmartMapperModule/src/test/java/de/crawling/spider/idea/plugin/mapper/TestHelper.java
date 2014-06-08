@@ -41,13 +41,15 @@ public class TestHelper {
         when(m0.getName()).thenReturn("setMethod");
         list.add(m0);
 
+
+        PsiMethod m2 = mock(PsiMethod.class);
+        when(m2.getName()).thenReturn("setMethod2");
+        list.add(m2);
+
         PsiMethod m1 = mock(PsiMethod.class);
         when(m1.getName()).thenReturn("setMethod1");
         list.add(m1);
 
-        PsiMethod m2 = mock(PsiMethod.class);
-        when(m2.getName()).thenReturn("setMethod2");
-        list.add(m2);;
         return list;
     }
 }
