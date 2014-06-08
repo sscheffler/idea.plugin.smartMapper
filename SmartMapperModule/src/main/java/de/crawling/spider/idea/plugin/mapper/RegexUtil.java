@@ -12,6 +12,11 @@ public class RegexUtil {
 
     public static final String EXTRACT_CLASS_NAME_PATTERN = ".*\\.([^\\.]*)$";
 
+    public static final RegexUtil INSTANCE = new RegexUtil();
+
+    private RegexUtil() {
+    }
+
     public String calculateVariableName(String canonicalText) {
         String variableName="";
         String className = calculateClassName(canonicalText);

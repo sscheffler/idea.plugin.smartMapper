@@ -26,8 +26,8 @@ import static org.apache.commons.lang.StringUtils.*;
  */
 public class DefaultSmartMapperImpl implements SmartMapper{
 
-    private final RegexUtil regexUtil = new RegexUtil();
-    private final MapperHelper mapperHelper = new MapperHelper();
+    private final RegexUtil regexUtil = RegexUtil.INSTANCE;
+    private final MapperHelper mapperHelper = MapperHelper.INSTANCE;
     private final static Logger LOGGER = LoggerFactory.getLogger(DefaultSmartMapperImpl.class);
 
     /**
@@ -35,7 +35,7 @@ public class DefaultSmartMapperImpl implements SmartMapper{
      * @param mapperProperties
      * @return
      */
-    private String getMappingMethodForSelecionWithGetterClass(MapperProperties mapperProperties){
+    private String getMappingMethodForSelecionWithGetterClass(MapperProperties mapperProperties) {
         StringBuilder builder = new StringBuilder();
         Project project = mapperProperties.getProject();
         String setterCanonicalClassName  = mapperProperties.getSetterCanonicalClassName();
@@ -57,9 +57,9 @@ public class DefaultSmartMapperImpl implements SmartMapper{
 
         getterClassName = (isBlank(getterClassName))?"":"final "+ getterClassName;
 
-//        String methodName = mapperHelper.retrieveMethodName(setter)
+        String methodName = mapperHelper.retrieveMethodName(setterClassName, mapperProperties.getEditorClass());
 
-        builder.append("public " + setterClassName +" mapTo"+ setterClassName+"("+ getterClassName + " " + getterVarName +"){\n");
+        builder.append("public " + setterClassName +" " +methodName+"("+ getterClassName + " " + getterVarName +"){\n");
         builder.append(setterClassName + " " + setterVarName + " = new " + setterClassName + "();\n");
 
         for (PsiMethod setterMethod : mapperProperties.getSelectedMethods()) {
