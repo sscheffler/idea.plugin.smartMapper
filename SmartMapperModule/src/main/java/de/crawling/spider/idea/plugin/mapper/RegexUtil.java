@@ -3,9 +3,12 @@ package de.crawling.spider.idea.plugin.mapper;
 import com.intellij.psi.PsiClass;
 import org.apache.commons.lang.StringUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static org.apache.commons.lang.StringUtils.*;
 
 /**
  * Created by sscheffler on 25.05.14.
@@ -25,15 +28,18 @@ public class RegexUtil {
      * @return
      */
     public String calculateVariableName(String canonicalText) {
+        if(isBlank(canonicalText)){
+            return "";
+        }
+
         String variableName="";
         String className = calculateClassName(canonicalText);
+        className = (isBlank(className))?canonicalText:className;
 
-        if(StringUtils.isNotBlank(className)){
-            char c []={className.toCharArray()[0]};
-            String swapCharString = new String(c).toLowerCase();
-            String swapRestString = className.substring(1);
-            variableName = swapCharString + swapRestString;
-        }
+        char c []={className.toCharArray()[0]};
+        String swapCharString = new String(c).toLowerCase();
+        String swapRestString = className.substring(1);
+        variableName = swapCharString + swapRestString;
 
         return variableName;
     }
@@ -45,6 +51,9 @@ public class RegexUtil {
      * @return
      */
     public String calculateClassName(String canonicalText) {
+        if(isBlank(canonicalText)){
+            return "";
+        }
         Pattern p = Pattern.compile(EXTRACT_CLASS_NAME_PATTERN);
         Matcher m = p.matcher(canonicalText);
         boolean classNameFound = m.find();
@@ -57,6 +66,9 @@ public class RegexUtil {
 
 
     public List<String> findAllMethodsWithIndex(String mapperMethodPrefix, String methodName, PsiClass editorClass) {
+        if(isBlank(methodName) || null == editorClass){
+            return Collections.emptyList();
+        }
         return null;
     }
 }

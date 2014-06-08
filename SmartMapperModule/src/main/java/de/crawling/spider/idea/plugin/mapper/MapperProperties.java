@@ -87,14 +87,14 @@ public class MapperProperties {
         this.defaultValues = defaultValues;
     }
 
-    public boolean propertiesValid(){
+    public boolean propertiesValid() {
         return (isNotBlank(setterCanonicalClassName) &&
                 null != selectedMethods &&
                 !selectedMethods.isEmpty() &&
-                null!=project );
+                null != project);
     }
 
-    public boolean propertiesValidForGetter(){
+    public boolean propertiesValidForGetter() {
         return (propertiesValid() &&
                 isNotBlank(getterCanonicalClassName));
     }
