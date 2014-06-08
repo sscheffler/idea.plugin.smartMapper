@@ -100,7 +100,7 @@ public class RegexUtilTest {
         assertNotNull(toTest);
         assertEquals(3, toTest.size());
         for(PsiMethod method : toTest){
-            if(!StringUtils.startsWith("setMethod", method.getName())){
+            if(!StringUtils.startsWith(method.getName(), "setMethod")){
                 fail(method.getName()+" does not match");
             }
         }

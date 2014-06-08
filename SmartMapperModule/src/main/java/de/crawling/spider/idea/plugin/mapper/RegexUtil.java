@@ -3,7 +3,10 @@ package de.crawling.spider.idea.plugin.mapper;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -19,6 +22,7 @@ public class RegexUtil {
     public static final String EXTRACT_CLASS_NAME_PATTERN = ".*\\.([^\\.]*)$";
 
     public static final RegexUtil INSTANCE = new RegexUtil();
+    private final static Logger LOGGER = LoggerFactory.getLogger(RegexUtil.class);
 
     private RegexUtil() {
     }
@@ -70,6 +74,18 @@ public class RegexUtil {
         if(isBlank(methodName) || null == editorClass){
             return Collections.emptyList();
         }
-        return null;
+        String prefix = (isBlank(mapperMethodPrefix))?"":mapperMethodPrefix;
+
+        List<PsiMethod> relevantMethods = new ArrayList<>();
+        for(PsiMethod method : editorClass.getMethods()){
+
+            LOGGER.trace("check if method name matches to '{}' + '{}'",prefix, methodName);
+
+            if(method.getName().matches( "^" + prefix + methodName + "\\d*$" )){
+                relevantMethods.add(method);
+            }
+        }
+
+        return relevantMethods;
     }
 }
