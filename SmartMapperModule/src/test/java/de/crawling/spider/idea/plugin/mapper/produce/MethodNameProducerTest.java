@@ -5,31 +5,30 @@ import com.intellij.psi.PsiMethod;
 import de.crawling.spider.idea.plugin.mapper.TestHelper;
 import de.crawling.spider.idea.plugin.mapper.util.MapperProperties;
 import de.crawling.spider.idea.plugin.mapper.util.RegexUtil;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class MethodNameProducerTest extends TestHelper{
 
-    public static final String SET = "set";
-    public static final String METHOD = "Method";
+    public static final String SET_PREFIX = "set";
+    public static final String METHOD_NAME = "Method";
 
 
     @Mock
-    private RegexUtil regexUtil;
+    private RegexUtil regexUtilMock;
 
     @Mock
-    PsiClass psiClass;
+    PsiClass editorClassMock;
 
     @InjectMocks
     private MethodNameProducer methodNameProducer = MethodNameProducer.INSTANCE;
@@ -44,8 +43,10 @@ public class MethodNameProducerTest extends TestHelper{
         methods = createInputMethodTestData();
         retrieveMethods = createOutputMethodTestData();
 
-        when(psiClass.getMethods()).thenReturn(methods);
-        when(regexUtil.findAllMethodsWithIndex(SET, METHOD, psiClass)).thenReturn(retrieveMethods);
+        when(editorClassMock.getName()).thenReturn(METHOD_NAME);
+
+        when(editorClassMock.getMethods()).thenReturn(methods);
+        when(regexUtilMock.findAllMethodsWithIndex(SET_PREFIX, METHOD_NAME, editorClassMock)).thenReturn(retrieveMethods);
 
     }
 
@@ -57,7 +58,13 @@ public class MethodNameProducerTest extends TestHelper{
     */
     @Test
     public final void testCreateMethodName() {
-        MapperProperties properties = mock(MapperProperties.class);
+        MapperProperties propertiesMock = mock(MapperProperties.class);
+        when(propertiesMock.getMapperMethodPrefix()).thenReturn(SET_PREFIX);
+        when(propertiesMock.getEditorClass()).thenReturn(editorClassMock);
+
+        String toTest = methodNameProducer.produceMethodName(propertiesMock);
+
+        Assert.assertEquals(SET_PREFIX+METHOD_NAME+"3", toTest);
 
 
     }
