@@ -95,7 +95,6 @@ public class RegexUtil {
 
 
     public int getIncrementIndex(List<PsiMethod> methods) {
-//        SortedList<Integer> list = new SortedList<>();
         List<Integer> resultList = new ArrayList<Integer>();
 
         for(PsiMethod method : methods){
