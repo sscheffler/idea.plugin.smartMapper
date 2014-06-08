@@ -1,8 +1,7 @@
-package de.crawling.spider.idea.plugin.mapper;
+package de.crawling.spider.idea.plugin.mapper.util;
 
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

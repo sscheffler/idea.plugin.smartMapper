@@ -3,21 +3,15 @@ package de.crawling.spider.idea.plugin.mapper.map;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.search.GlobalSearchScope;
-import de.crawling.spider.idea.plugin.mapper.MapperHelper;
-import de.crawling.spider.idea.plugin.mapper.MapperProperties;
-import de.crawling.spider.idea.plugin.mapper.RegexUtil;
-import org.apache.commons.lang.StringUtils;
+import de.crawling.spider.idea.plugin.mapper.util.MapperHelper;
+import de.crawling.spider.idea.plugin.mapper.util.MapperProperties;
+import de.crawling.spider.idea.plugin.mapper.util.RegexUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import static org.apache.commons.lang.StringUtils.*;
 

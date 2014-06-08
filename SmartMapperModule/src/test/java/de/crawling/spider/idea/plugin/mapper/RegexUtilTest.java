@@ -2,16 +2,12 @@ package de.crawling.spider.idea.plugin.mapper;
 
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
-import com.intellij.psi.impl.source.PsiClassImpl;
+import de.crawling.spider.idea.plugin.mapper.util.RegexUtil;
 import org.apache.commons.lang.StringUtils;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
