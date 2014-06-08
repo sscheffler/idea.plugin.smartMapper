@@ -70,6 +70,13 @@ public class RegexUtil {
     }
 
 
+    /**
+     * finds all methods which starts with 'prefix' + 'methodName'
+     * @param mapperMethodPrefix
+     * @param methodName
+     * @param editorClass
+     * @return
+     */
     public List<PsiMethod> findAllMethodsWithIndex(String mapperMethodPrefix, String methodName, PsiClass editorClass) {
         if(isBlank(methodName) || null == editorClass){
             return Collections.emptyList();
