@@ -1,4 +1,4 @@
-package de.crawling.spider.idea.plugin.mapper;
+package de.crawling.spider.idea.plugin.mapper.update;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
@@ -12,14 +12,16 @@ import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.psi.impl.JavaCodeFragmentFactoryImpl;
 
+import static org.apache.commons.lang.StringUtils.isNotBlank;
+
 /**
  * Created by sscheffler on 25.05.14.
  */
-public class Updater {
+public class DefaultUpdaterImpl implements Updater{
 
     private Project project;
 
-    public Updater(Project project) {
+    public DefaultUpdaterImpl(Project project) {
         this.project = project;
     }
 
@@ -27,7 +29,8 @@ public class Updater {
      * updates the setter on the document
      * @param setterCalls
      */
-    public void updateOnDocument(final String setterCalls, PsiClass psiClass){
+    @Deprecated
+    private void updateOnDocument(final String setterCalls, PsiClass psiClass){
         Editor editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
         final Document document = editor.getDocument();
         final int cursorPos = editor.getCaretModel().getOffset();
@@ -56,7 +59,8 @@ public class Updater {
      * @param setterCalls
      * @param psiClass
      */
-    public void updateWithinMethod(final String setterCalls, final PsiClass psiClass){
+    @Deprecated
+    private void updateWithinMethod(final String setterCalls, final PsiClass psiClass){
 
 
         Editor editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
@@ -83,7 +87,7 @@ public class Updater {
      * @param methodString
      * @param psiClass
      */
-    public void updateClassWithCreatingNewMethod(final String methodString, final PsiClass psiClass){
+    private void updateClassWithCreatingNewMethod(final String methodString, final PsiClass psiClass){
 
         new WriteCommandAction.Simple(psiClass.getProject(), psiClass.getContainingFile()){
 
@@ -97,5 +101,13 @@ public class Updater {
 
             }
         }.execute();
+    }
+
+    @Override
+    public void updateClassWithMethod(String methodString, PsiClass updateClass) {
+
+        if(isNotBlank(methodString)) {
+            updateClassWithCreatingNewMethod(methodString, updateClass);
+        }
     }
 }

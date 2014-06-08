@@ -10,9 +10,10 @@ import com.intellij.psi.util.PsiTreeUtil;
 import de.crawling.spider.idea.plugin.mapper.gui.PluginMainDialog;
 import de.crawling.spider.idea.plugin.mapper.map.DefaultSmartMapperImpl;
 import de.crawling.spider.idea.plugin.mapper.map.SmartMapper;
+import de.crawling.spider.idea.plugin.mapper.update.DefaultUpdaterImpl;
+import de.crawling.spider.idea.plugin.mapper.update.Updater;
 
 import javax.swing.*;
-import java.util.List;
 
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 
@@ -34,44 +35,17 @@ public class SmartMapperEditorPopupAction extends AnAction {
             PluginMainDialog dialog = new PluginMainDialog(project);
             dialog.show();
             MapperProperties properties = dialog.getMapperProperties();
+
             if(dialog.isOK() && properties.propertiesValid()){
-                updater = new Updater(project);
-
+                updater = new DefaultUpdaterImpl(project);
                 String methodString = smartMapper.buildmapperMethod(properties);
-
-                if(isNotBlank(methodString)) {
-                    updater.updateClassWithCreatingNewMethod(methodString, dialog.getSelectedSetterClass());
-                }else{
-                    return;
-                }
+                updater.updateClassWithMethod(methodString, dialog.getSelectedSetterClass());
             }
 
         }catch(IllegalArgumentException ex){
             JOptionPane.showMessageDialog(null, ex.getMessage(), "No editor open", JOptionPane.INFORMATION_MESSAGE);
         }
     }
-
-    /*private String buildSimpleMethodString(final Project project, final PluginMainDialog dialog) {
-        List<PsiMethod> methods = dialog.getSelectedSetterMethods();
-
-        return smartMapper.getSimpleMappingMethodForSelecion(
-                dialog.getCannonicalSetterClassName(),
-                methods,
-                project
-        );
-    }
-
-    private String buildMethodStringWithMapping(final Project project, final PluginMainDialog dialog) {
-        List<PsiMethod> methods = dialog.getSelectedSetterMethods();
-
-        return smartMapper.getMappingMethodForSelecionWithGetterClass(
-                dialog.getCannonicalSetterClassName(),
-                dialog.getCannonicalGetterClassName(),
-                methods,
-                project,
-                dialog.isSuperClassMapping()
-        );
-    }*/
 
 
     private PsiClass getPsiClass(AnActionEvent e){
