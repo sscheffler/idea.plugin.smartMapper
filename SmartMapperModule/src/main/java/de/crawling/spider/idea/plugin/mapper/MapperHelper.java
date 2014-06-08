@@ -11,12 +11,15 @@ import com.intellij.psi.util.PsiTreeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 /**
  * Created by sscheffler on 08.06.14.
  */
 public class MapperHelper {
 
     public final static MapperHelper INSTANCE = new MapperHelper();
+    private RegexUtil regexUtil = RegexUtil.INSTANCE;
 
     protected MapperHelper(){
 
@@ -38,5 +41,16 @@ public class MapperHelper {
         }else{
             throw new IllegalArgumentException("selected file '"+psiFile.getName()+"' is no java file!");
         }
+    }
+
+    public String retrieveMethodName(String mapperMethodPrefix, String methodName, PsiClass editorClass) throws IllegalArgumentException{
+//        mapTo"+ setterClassName
+        if(null == editorClass){
+            throw new IllegalArgumentException("Editor class could not be resolved");
+        }
+
+        List<String> setterMethodList = regexUtil.findAllMethodsWithIndex(mapperMethodPrefix, methodName, editorClass);
+
+        return null;
     }
 }

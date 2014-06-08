@@ -26,6 +26,7 @@ import static org.apache.commons.lang.StringUtils.*;
  */
 public class DefaultSmartMapperImpl implements SmartMapper{
 
+    public static final String MAPPER_METHOD_PREFIX = "mapTo";
     private final RegexUtil regexUtil = RegexUtil.INSTANCE;
     private final MapperHelper mapperHelper = MapperHelper.INSTANCE;
     private final static Logger LOGGER = LoggerFactory.getLogger(DefaultSmartMapperImpl.class);
@@ -57,7 +58,7 @@ public class DefaultSmartMapperImpl implements SmartMapper{
 
         getterClassName = (isBlank(getterClassName))?"":"final "+ getterClassName;
 
-        String methodName = mapperHelper.retrieveMethodName(setterClassName, mapperProperties.getEditorClass());
+        String methodName = mapperHelper.retrieveMethodName(MAPPER_METHOD_PREFIX,setterClassName, mapperProperties.getEditorClass());
 
         builder.append("public " + setterClassName +" " +methodName+"("+ getterClassName + " " + getterVarName +"){\n");
         builder.append(setterClassName + " " + setterVarName + " = new " + setterClassName + "();\n");
