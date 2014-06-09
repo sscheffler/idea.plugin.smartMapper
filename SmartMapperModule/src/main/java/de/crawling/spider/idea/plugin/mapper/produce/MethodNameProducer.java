@@ -1,13 +1,11 @@
 package de.crawling.spider.idea.plugin.mapper.produce;
 
-import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
-import de.crawling.spider.idea.plugin.mapper.util.MapperProperties;
+import de.crawling.spider.idea.plugin.mapper.model.MapperProperties;
 import de.crawling.spider.idea.plugin.mapper.util.RegexUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
 import java.util.List;
 
 /**

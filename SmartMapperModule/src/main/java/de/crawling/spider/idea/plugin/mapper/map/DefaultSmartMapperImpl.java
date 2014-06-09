@@ -6,7 +6,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import de.crawling.spider.idea.plugin.mapper.produce.DefaultMethodParameterValueProducer;
 import de.crawling.spider.idea.plugin.mapper.util.MapperHelper;
-import de.crawling.spider.idea.plugin.mapper.util.MapperProperties;
+import de.crawling.spider.idea.plugin.mapper.model.MapperProperties;
 import de.crawling.spider.idea.plugin.mapper.util.RegexUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,9 +62,11 @@ public class DefaultSmartMapperImpl implements SmartMapper{
             if(setterMethod.getName().startsWith("set")){
                 String setterName = setterMethod.getName();
                 LOGGER.trace("Building setter String for:{}", setterName);
-                String getterName = calculateGetter(getterClass,getterVarName, setterName, mapperProperties.isLoadSuperClassMethods());
+                String parameters = calculateGetter(getterClass,getterVarName, setterName, mapperProperties.isLoadSuperClassMethods());
 
-                builder.append(setterVarName + "." + setterName + "( "+getterName+" );\n");
+                parameters = (isNotBlank(parameters)) ? parameters : calculateDefaultValue(setterName, mapperProperties, setterMethod.getParameterList());
+
+                builder.append(setterVarName + "." + setterName + "( "+parameters+" );\n");
 
             }
         }
@@ -116,7 +118,7 @@ public class DefaultSmartMapperImpl implements SmartMapper{
                 String setterName = setterMethod.getName();
                 LOGGER.trace("Building setter String for:{}", setterName);
 
-                String defaultValue = calculateDefaultValue(null, setterName, mapperProperties, setterMethod.getParameterList());
+                String defaultValue = calculateDefaultValue(setterName, mapperProperties, setterMethod.getParameterList());
 
                 builder.append(setterVarName + "." + setterName + "( " + defaultValue + " );\n");
 
@@ -128,9 +130,9 @@ public class DefaultSmartMapperImpl implements SmartMapper{
 
     }
 
-    private String calculateDefaultValue(final String getterValue, final String setterName, final MapperProperties mapperProperties, PsiParameterList parameterList) {
-        if(isNotBlank(getterValue) && ! mapperProperties.isDefaultValues()){
-            LOGGER.debug("No default value will be calculated: getter[{}], default[{}]", getterValue, mapperProperties.isDefaultValues());
+    private String calculateDefaultValue(final String setterName, final MapperProperties mapperProperties, PsiParameterList parameterList) {
+        if(!mapperProperties.isDefaultValues()){
+            LOGGER.debug("No default value will be calculated:, default selection[{}]", mapperProperties.isDefaultValues());
         }
 
         final StringBuilder builder = new StringBuilder();
@@ -142,10 +144,7 @@ public class DefaultSmartMapperImpl implements SmartMapper{
             appender = calculateDefaultValueAppender(setterName, psiParameter, referenceElement, appender);
 
             appendDefaultValue(parameterList, builder, psiParameter, appender);
-
-
         }
-
         return builder.toString();
     }
 

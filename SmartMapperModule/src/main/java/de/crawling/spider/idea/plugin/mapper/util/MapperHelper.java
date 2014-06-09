@@ -5,11 +5,10 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
+import de.crawling.spider.idea.plugin.mapper.model.MapperProperties;
 import de.crawling.spider.idea.plugin.mapper.produce.MethodNameProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 /**
  * Created by sscheffler on 08.06.14.

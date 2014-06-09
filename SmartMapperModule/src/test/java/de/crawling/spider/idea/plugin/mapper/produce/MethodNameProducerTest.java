@@ -3,7 +3,7 @@ package de.crawling.spider.idea.plugin.mapper.produce;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
 import de.crawling.spider.idea.plugin.mapper.TestHelper;
-import de.crawling.spider.idea.plugin.mapper.util.MapperProperties;
+import de.crawling.spider.idea.plugin.mapper.model.MapperProperties;
 import de.crawling.spider.idea.plugin.mapper.util.RegexUtil;
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,7 +17,6 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

@@ -9,7 +9,7 @@ import de.crawling.spider.idea.plugin.mapper.map.SmartMapper;
 import de.crawling.spider.idea.plugin.mapper.update.DefaultUpdaterImpl;
 import de.crawling.spider.idea.plugin.mapper.update.Updater;
 import de.crawling.spider.idea.plugin.mapper.util.MapperHelper;
-import de.crawling.spider.idea.plugin.mapper.util.MapperProperties;
+import de.crawling.spider.idea.plugin.mapper.model.MapperProperties;
 import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

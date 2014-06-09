@@ -11,7 +11,7 @@ import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBTextField;
-import de.crawling.spider.idea.plugin.mapper.util.MapperProperties;
+import de.crawling.spider.idea.plugin.mapper.model.MapperProperties;
 import de.crawling.spider.idea.plugin.mapper.gui.listeners.GetterPsiClassFindKeyListner;
 import de.crawling.spider.idea.plugin.mapper.gui.listeners.SetterPsiClassFindKeyListner;
 import org.jetbrains.annotations.Nullable;

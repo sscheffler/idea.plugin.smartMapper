@@ -1,4 +1,4 @@
-package de.crawling.spider.idea.plugin.mapper.util;
+package de.crawling.spider.idea.plugin.mapper.model;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
