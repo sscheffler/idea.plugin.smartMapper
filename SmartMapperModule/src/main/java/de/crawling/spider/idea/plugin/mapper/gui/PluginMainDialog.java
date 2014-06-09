@@ -176,6 +176,14 @@ public class PluginMainDialog extends DialogWrapper {
     }
 
     public MapperProperties getMapperProperties(){
+
+        /*try {
+            Integer.T
+            Class c = Class.forName("int");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }*/
+
         return new MapperProperties(
                 getCannonicalSetterClassName(),
                 getCannonicalGetterClassName(),
