@@ -109,7 +109,7 @@ public class DefaultSmartMapperImpl implements SmartMapper{
 
         String methodName = mapperHelper.retrieveMethodName(mapperProperties);
 
-        builder.append("public " + setterClassName +" mapTo"+ methodName+"(){\n");
+        builder.append("public " + setterClassName +" " + methodName+"(){\n");
         builder.append(setterClassName + " " + setterVarName + " = new " + setterClassName + "();\n");
 
         for (PsiMethod setterMethod : mapperProperties.getSelectedMethods()) {
