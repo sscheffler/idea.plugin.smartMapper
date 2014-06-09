@@ -107,8 +107,9 @@ public class DefaultSmartMapperImpl implements SmartMapper{
             return "";
         }
 
+        String methodName = mapperHelper.retrieveMethodName(mapperProperties);
 
-        builder.append("public " + setterClassName +" mapTo"+ setterClassName+"(){\n");
+        builder.append("public " + setterClassName +" mapTo"+ methodName+"(){\n");
         builder.append(setterClassName + " " + setterVarName + " = new " + setterClassName + "();\n");
 
         for (PsiMethod setterMethod : mapperProperties.getSelectedMethods()) {
@@ -137,12 +138,10 @@ public class DefaultSmartMapperImpl implements SmartMapper{
             PsiJavaCodeReferenceElement referenceElement = PsiTreeUtil.findChildOfType(psiParameter, PsiJavaCodeReferenceElement.class);
             if(null != referenceElement){
                 String qualifiedClassName = referenceElement.getQualifiedName();
-                defaultMethodParameterValueProducer.produceDefaultValue(psiParameter, qualifiedClassName);
+                return defaultMethodParameterValueProducer.produceDefaultValue(qualifiedClassName, setterName);
             }
         }
 
-
-//            String value = regexUtil.calculateDefaultValueFromSetter(setterName);
         return "";
     }
 
