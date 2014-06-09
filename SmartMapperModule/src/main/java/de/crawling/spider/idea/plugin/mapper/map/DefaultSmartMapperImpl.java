@@ -114,7 +114,9 @@ public class DefaultSmartMapperImpl implements SmartMapper{
                 String setterName = setterMethod.getName();
                 LOGGER.trace("Building setter String for:{}", setterName);
 
-                builder.append(setterVarName + "." + setterName + "( );\n");
+                String defaultValue = calculateDefaultValue(null, setterName, mapperProperties);
+
+                builder.append(setterVarName + "." + setterName + "( " + defaultValue + " );\n");
 
             }
         }
@@ -122,6 +124,14 @@ public class DefaultSmartMapperImpl implements SmartMapper{
         builder.append("return "+setterVarName+";\n}");
         return builder.toString();
 
+    }
+
+    private String calculateDefaultValue(final String getterValue, final String setterName, final MapperProperties mapperProperties) {
+        if(isNotBlank(getterValue) && ! mapperProperties.isDefaultValues()){
+            LOGGER.debug("No default value will be calculated: getter[{}], default[{}]", getterValue, mapperProperties.isDefaultValues());
+        }
+
+        return "";
     }
 
     private String calculateGetter(final PsiClass getterClass,final String getterVarName, final String setterName, final boolean loadSuperClassMethods) {
