@@ -37,9 +37,10 @@ public class MethodNameProducer {
 
         if(!relevantMethods.isEmpty()){
             int newIndex = regexUtil.getIncrementIndex(relevantMethods);
-            LOGGER.trace("New index: {}", newIndex);
+            LOGGER.debug("New index: {}", newIndex);
             result = result + newIndex;
         }
+        LOGGER.debug("MethodName: {}", result);
 
         return result;
     }

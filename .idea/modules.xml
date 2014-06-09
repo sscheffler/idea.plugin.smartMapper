@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/SmartMapperModule/SmartMapperModule.iml" filepath="$PROJECT_DIR$/SmartMapperModule/SmartMapperModule.iml" />
+      <module fileurl="file://$PROJECT_DIR$/smartMapper.iml" filepath="$PROJECT_DIR$/smartMapper.iml" />
+    </modules>
+  </component>
+</project>
+

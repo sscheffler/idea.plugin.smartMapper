@@ -45,6 +45,8 @@ public class SmartMapperEditorPopupAction extends AnAction {
                 properties.setEditorClass(mapperHelper.retrieveEditorClass(e));
                 updater = new DefaultUpdaterImpl(project);
                 String methodString = smartMapper.buildMapperMethod(properties);
+                LOGGER.debug("Method: {}", methodString);
+
                 updater.updateClassWithMethod(methodString, dialog.getSelectedSetterClass());
             }
 
