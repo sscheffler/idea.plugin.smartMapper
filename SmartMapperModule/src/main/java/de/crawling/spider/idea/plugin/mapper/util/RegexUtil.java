@@ -26,6 +26,7 @@ public class RegexUtil {
     public static final RegexUtil INSTANCE = new RegexUtil();
     private final static Logger LOGGER = LoggerFactory.getLogger(RegexUtil.class);
     public static final String EXTRACT_METHOD_INDEX_PATTERN = "^[^\\d]*(\\d*)";
+    public static final String EXTRACT_SETTER_QUALIFIED_NAME_PATTERN = "^set(.*)";
 
     private RegexUtil() {
     }
@@ -123,5 +124,9 @@ public class RegexUtil {
             className = m.group(1);
         }
         return className;
+    }
+
+    public String calculateDefaultValueFromSetter(String setterMethodName) {
+        return extractFirstGroup(setterMethodName, EXTRACT_SETTER_QUALIFIED_NAME_PATTERN);
     }
 }

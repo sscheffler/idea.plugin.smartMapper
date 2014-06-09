@@ -116,5 +116,17 @@ public class RegexUtilTest extends TestHelper{
 
     }
 
+    /**
+    * tests if the correct value for a setter method will be extracted
+    *
+    * @author sscheffler
+    * @date 09.06.14
+    */
+    @Test
+    public final void testExtractDefaultValueFromSetter() {
+        String setTestValue = "setTestValue";
+        String toTest = regexUtil.calculateDefaultValueFromSetter(setTestValue);
+        assertEquals("TestValue", toTest);
+    }
 
 }
