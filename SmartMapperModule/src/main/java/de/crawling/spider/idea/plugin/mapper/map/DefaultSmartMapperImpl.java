@@ -139,19 +139,38 @@ public class DefaultSmartMapperImpl implements SmartMapper{
         for(PsiParameter psiParameter : parameterList.getParameters()){
             PsiElement[] children = psiParameter.getChildren();
             PsiJavaCodeReferenceElement referenceElement = PsiTreeUtil.findChildOfType(psiParameter, PsiJavaCodeReferenceElement.class);
-            if(null != referenceElement){
-                String qualifiedClassName = referenceElement.getQualifiedName();
-                int index = parameterList.getParameterIndex(psiParameter);
-                if(index > 0){
-                    builder.append(", ");
-                }
-                builder.append(defaultMethodParameterValueProducer.produceDefaultValue(qualifiedClassName, setterName));
-            }else{
-                PsiKeyword keyWord = PsiTreeUtil.findChildOfType(psiParameter, PsiKeyword.class);
-            }
+            String appender = "";
+            appender = calculateDefaultValueAppender(setterName, psiParameter, referenceElement, appender);
+
+            appendDefaultValue(parameterList, builder, psiParameter, appender);
+
+
         }
 
         return builder.toString();
+    }
+
+    private String calculateDefaultValueAppender(String setterName, PsiParameter psiParameter, PsiJavaCodeReferenceElement referenceElement, String appender) {
+        if(null != referenceElement){
+            String qualifiedClassName = referenceElement.getQualifiedName();
+            appender = defaultMethodParameterValueProducer.produceDefaultValue(qualifiedClassName, setterName);
+        }else{
+            PsiKeyword keyWord = PsiTreeUtil.findChildOfType(psiParameter, PsiKeyword.class);
+            if(null != keyWord){
+                appender = defaultMethodParameterValueProducer.produceDefaultValueFromKeyWord(keyWord.getText());
+            }
+        }
+        return appender;
+    }
+
+    private void appendDefaultValue(PsiParameterList parameterList, StringBuilder builder, PsiParameter psiParameter, String appender) {
+        if(isNotBlank(appender)) {
+            int index = parameterList.getParameterIndex(psiParameter);
+            if (index > 0) {
+                builder.append(", ");
+            }
+            builder.append(appender);
+        }
     }
 
     private String calculateGetter(final PsiClass getterClass,final String getterVarName, final String setterName, final boolean loadSuperClassMethods) {

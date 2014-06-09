@@ -74,4 +74,7 @@ public class DefaultMethodParameterValueProducer {
 
         return returnValue;
     }
+
+    public String produceDefaultValueFromKeyWord(String text) {
+    }
 }
