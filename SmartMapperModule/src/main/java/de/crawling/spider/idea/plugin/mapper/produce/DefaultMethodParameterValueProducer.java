@@ -22,19 +22,41 @@ public class DefaultMethodParameterValueProducer {
     }
 
 
+    /**
+     * builds default value for non primitive types
+     * @param qualifiedClassName
+     * @param setterMethodName
+     * @return
+     */
     public String produceDefaultValue(String qualifiedClassName, String setterMethodName) {
         String returnValue = "";
         try {
             Class parameterTypeClass = Class.forName(qualifiedClassName);
+
+            LOGGER.trace("Type [{}] - primitive [{}]", qualifiedClassName, parameterTypeClass.isPrimitive());
             if(!parameterTypeClass.isPrimitive()){
                 returnValue = evaluateNonPrimitives(parameterTypeClass.getCanonicalName(), setterMethodName);
+            }else{
+                returnValue = evaluatePrimitives(parameterTypeClass.getCanonicalName());
             }
+
+            LOGGER.trace("check if type is an array");
         }catch(ClassNotFoundException cne){
             LOGGER.error("Class [{}] was not found", qualifiedClassName);
             return "";
         }
 
         return returnValue;
+    }
+
+    /**
+     * builds default value for primitive types
+     * @param canonicalName
+     * @return
+     */
+    private String evaluatePrimitives(String canonicalName) {
+
+        return null;
     }
 
     private String evaluateNonPrimitives(final String name, String setterMethodName){

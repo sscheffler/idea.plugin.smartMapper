@@ -134,15 +134,24 @@ public class DefaultSmartMapperImpl implements SmartMapper{
             LOGGER.debug("No default value will be calculated: getter[{}], default[{}]", getterValue, mapperProperties.isDefaultValues());
         }
 
+        final StringBuilder builder = new StringBuilder();
+
         for(PsiParameter psiParameter : parameterList.getParameters()){
+            PsiElement[] children = psiParameter.getChildren();
             PsiJavaCodeReferenceElement referenceElement = PsiTreeUtil.findChildOfType(psiParameter, PsiJavaCodeReferenceElement.class);
             if(null != referenceElement){
                 String qualifiedClassName = referenceElement.getQualifiedName();
-                return defaultMethodParameterValueProducer.produceDefaultValue(qualifiedClassName, setterName);
+                int index = parameterList.getParameterIndex(psiParameter);
+                if(index > 0){
+                    builder.append(", ");
+                }
+                builder.append(defaultMethodParameterValueProducer.produceDefaultValue(qualifiedClassName, setterName));
+            }else{
+                PsiKeyword keyWord = PsiTreeUtil.findChildOfType(psiParameter, PsiKeyword.class);
             }
         }
 
-        return "";
+        return builder.toString();
     }
 
     private String calculateGetter(final PsiClass getterClass,final String getterVarName, final String setterName, final boolean loadSuperClassMethods) {
