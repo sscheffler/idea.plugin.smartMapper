@@ -37,7 +37,7 @@ public class SmartMapperEditorPopupAction extends AnAction {
             PluginMainDialog dialog = new PluginMainDialog(project);
 
             dialog.show();
-            MapperProperties properties = dialog.getMapperProperties();
+            MapperProperties properties = dialog.buildResults();
 
             if(dialog.isOK() && properties.propertiesValid()){
                 LOGGER.debug("Mapper properties are valid. Method will be build");

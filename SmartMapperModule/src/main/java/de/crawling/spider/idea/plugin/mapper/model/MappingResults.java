@@ -4,7 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Created by sscheffler on 09.06.14.
+ * TODO: really needed?
+ *
+ * @author sscheffler(stefan-scheffler@web.de)
+ * @date 09.06.14
  */
 public class MappingResults {
 

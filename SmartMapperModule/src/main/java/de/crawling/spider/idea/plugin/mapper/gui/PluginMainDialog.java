@@ -11,10 +11,14 @@ import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBTextField;
+import de.crawling.spider.idea.plugin.mapper.model.DefaultPrimitiveTypes;
 import de.crawling.spider.idea.plugin.mapper.model.MapperProperties;
 import de.crawling.spider.idea.plugin.mapper.gui.listeners.GetterPsiClassFindKeyListner;
 import de.crawling.spider.idea.plugin.mapper.gui.listeners.SetterPsiClassFindKeyListner;
+import de.crawling.spider.idea.plugin.mapper.model.MappingResults;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,6 +29,7 @@ import java.util.*;
  */
 public class PluginMainDialog extends DialogWrapper {
 
+    private final static Logger LOGGER = LoggerFactory.getLogger(PluginMainDialog.class);
     public static final String TITLE = "Smart Mapper";
 
     private CollectionListModel<PsiMethod> methodModel;
@@ -175,14 +180,12 @@ public class PluginMainDialog extends DialogWrapper {
         getterTextField.setBackground(color);
     }
 
-    public MapperProperties getMapperProperties(){
+    /**
+     * builds the mapper properties
+     * @return
+     */
+    public MapperProperties buildResults(){
 
-        /*try {
-            Integer.T
-            Class c = Class.forName("int");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }*/
 
         return new MapperProperties(
                 getCannonicalSetterClassName(),
