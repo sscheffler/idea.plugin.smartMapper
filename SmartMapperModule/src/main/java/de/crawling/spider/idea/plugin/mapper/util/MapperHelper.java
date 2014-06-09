@@ -50,22 +50,5 @@ public class MapperHelper {
         return methodNameProducer.produceMethodName(mapperProperties);
     }
 
-    public PsiClass retrieveGetterClass(Project project, Editor editor, PsiClass editorClass) {
-        PsiClass getterClass = null;
-        LOGGER.debug("Check if a getter can be found");
-        GlobalSearchScope scope = GlobalSearchScope.allScope(project);
 
-        int cursorPos = editor.getCaretModel().getOffset();
-        PsiElement element = editorClass.getContainingFile().findElementAt(cursorPos);
-
-        PsiTypeElement psiJavaCodeReferenceElement = PsiTreeUtil.getParentOfType(element, PsiTypeElement.class);
-        if(null != psiJavaCodeReferenceElement) {
-
-            String canonicalText = psiJavaCodeReferenceElement.getType().getCanonicalText();
-            String variableName = "";
-            getterClass = JavaPsiFacade.getInstance(project).findClass(canonicalText, scope);
-
-        }
-        return getterClass;
-    }
 }

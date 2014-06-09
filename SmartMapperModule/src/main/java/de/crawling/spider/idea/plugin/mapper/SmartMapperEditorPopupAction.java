@@ -47,13 +47,11 @@ public class SmartMapperEditorPopupAction extends AnAction {
 
 
             Editor editor = e.getData(PlatformDataKeys.EDITOR);
-            PsiClass editorClass = mapperHelper.retrieveEditorClass(e);
-            PsiClass getterClass = mapperHelper.retrieveGetterClass(project, editor, editorClass);
 
-            if(null!= getterClass){
-                dialog.setSelectedGetterClass(getterClass);
-                dialog.setGetterColor(Color.green);
-            }
+            PsiClass editorClass = mapperHelper.retrieveEditorClass(e);
+            fillGetterTextField(project, editor, editorClass, dialog);
+
+
 
 
             dialog.show();
@@ -75,7 +73,26 @@ public class SmartMapperEditorPopupAction extends AnAction {
         }
     }
 
+    public void fillGetterTextField(Project project, Editor editor, PsiClass editorClass, PluginMainDialog dialog) {
+        PsiClass getterClass = null;
+        LOGGER.debug("Check if a getter can be found");
+        GlobalSearchScope scope = GlobalSearchScope.allScope(project);
 
+        int cursorPos = editor.getCaretModel().getOffset();
+        PsiElement element = editorClass.getContainingFile().findElementAt(cursorPos);
+
+        PsiTypeElement psiJavaCodeReferenceElement = PsiTreeUtil.getParentOfType(element, PsiTypeElement.class);
+        if(null != psiJavaCodeReferenceElement) {
+
+            String canonicalText = psiJavaCodeReferenceElement.getType().getCanonicalText();
+            getterClass = JavaPsiFacade.getInstance(project).findClass(canonicalText, scope);
+            if(null!= getterClass){
+                dialog.setSelectedGetterClass(getterClass);
+                dialog.setGetterTextFieldText(canonicalText);
+                dialog.setGetterColor(Color.green);
+            }
+        }
+    }
 
 
 }
