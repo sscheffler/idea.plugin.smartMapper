@@ -3,6 +3,7 @@ package de.crawling.spider.idea.plugin.mapper.map;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.util.PsiTreeUtil;
 import de.crawling.spider.idea.plugin.mapper.produce.DefaultMethodParameterValueProducer;
 import de.crawling.spider.idea.plugin.mapper.util.MapperHelper;
 import de.crawling.spider.idea.plugin.mapper.util.MapperProperties;
@@ -131,9 +132,14 @@ public class DefaultSmartMapperImpl implements SmartMapper{
         if(isNotBlank(getterValue) && ! mapperProperties.isDefaultValues()){
             LOGGER.debug("No default value will be calculated: getter[{}], default[{}]", getterValue, mapperProperties.isDefaultValues());
         }
-            for(PsiParameter psiParameter : parameterList.getParameters()){
-                defaultMethodParameterValueProducer.produceDefaultValue(psiParameter);
+
+        for(PsiParameter psiParameter : parameterList.getParameters()){
+            PsiJavaCodeReferenceElement referenceElement = PsiTreeUtil.findChildOfType(psiParameter, PsiJavaCodeReferenceElement.class);
+            if(null != referenceElement){
+                String qualifiedClassName = referenceElement.getQualifiedName();
+                defaultMethodParameterValueProducer.produceDefaultValue(psiParameter, qualifiedClassName);
             }
+        }
 
 
 //            String value = regexUtil.calculateDefaultValueFromSetter(setterName);
