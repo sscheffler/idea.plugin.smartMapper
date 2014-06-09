@@ -1,10 +1,9 @@
 package de.crawling.spider.idea.plugin.mapper.map;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.JavaPsiFacade;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiMethod;
+import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
+import de.crawling.spider.idea.plugin.mapper.produce.DefaultMethodParameterValueProducer;
 import de.crawling.spider.idea.plugin.mapper.util.MapperHelper;
 import de.crawling.spider.idea.plugin.mapper.util.MapperProperties;
 import de.crawling.spider.idea.plugin.mapper.util.RegexUtil;
@@ -21,8 +20,10 @@ import static org.apache.commons.lang.StringUtils.*;
 public class DefaultSmartMapperImpl implements SmartMapper{
 
     public static final String MAPPER_METHOD_PREFIX = "mapTo";
-    private final RegexUtil regexUtil = RegexUtil.INSTANCE;
-    private final MapperHelper mapperHelper = MapperHelper.INSTANCE;
+    private RegexUtil regexUtil = RegexUtil.INSTANCE;
+    private MapperHelper mapperHelper = MapperHelper.INSTANCE;
+    private DefaultMethodParameterValueProducer defaultMethodParameterValueProducer = DefaultMethodParameterValueProducer.INSTANCE;
+
     private final static Logger LOGGER = LoggerFactory.getLogger(DefaultSmartMapperImpl.class);
 
     /**
@@ -40,8 +41,8 @@ public class DefaultSmartMapperImpl implements SmartMapper{
         String getterClassName = regexUtil.calculateClassName(getterCanonicalClassName);
         GlobalSearchScope scope = GlobalSearchScope.allScope(project);
 
-        String setterVarName = regexUtil.calculateVariableName(setterCanonicalClassName);
-        String getterVarName = regexUtil.calculateVariableName(getterCanonicalClassName);
+        String setterVarName = regexUtil.calculateVariableNameFromClass(setterCanonicalClassName);
+        String getterVarName = regexUtil.calculateVariableNameFromClass(getterCanonicalClassName);
 
         PsiClass setterClass = JavaPsiFacade.getInstance(project).findClass(setterCanonicalClassName, scope);
         PsiClass getterClass = JavaPsiFacade.getInstance(project).findClass(getterCanonicalClassName, scope);
@@ -94,7 +95,7 @@ public class DefaultSmartMapperImpl implements SmartMapper{
 
         String setterClassName = regexUtil.calculateClassName(setterCanonicalClassName);
         GlobalSearchScope scope = GlobalSearchScope.allScope(project);
-        String setterVarName = regexUtil.calculateVariableName(setterCanonicalClassName);
+        String setterVarName = regexUtil.calculateVariableNameFromClass(setterCanonicalClassName);
 
         //Error Handling
         PsiClass setterClass = JavaPsiFacade.getInstance(project).findClass(setterCanonicalClassName, scope);
@@ -114,7 +115,7 @@ public class DefaultSmartMapperImpl implements SmartMapper{
                 String setterName = setterMethod.getName();
                 LOGGER.trace("Building setter String for:{}", setterName);
 
-                String defaultValue = calculateDefaultValue(null, setterName, mapperProperties);
+                String defaultValue = calculateDefaultValue(null, setterName, mapperProperties, setterMethod.getParameterList());
 
                 builder.append(setterVarName + "." + setterName + "( " + defaultValue + " );\n");
 
@@ -126,11 +127,16 @@ public class DefaultSmartMapperImpl implements SmartMapper{
 
     }
 
-    private String calculateDefaultValue(final String getterValue, final String setterName, final MapperProperties mapperProperties) {
+    private String calculateDefaultValue(final String getterValue, final String setterName, final MapperProperties mapperProperties, PsiParameterList parameterList) {
         if(isNotBlank(getterValue) && ! mapperProperties.isDefaultValues()){
             LOGGER.debug("No default value will be calculated: getter[{}], default[{}]", getterValue, mapperProperties.isDefaultValues());
         }
+            for(PsiParameter psiParameter : parameterList.getParameters()){
+                defaultMethodParameterValueProducer.produceDefaultValue(psiParameter);
+            }
 
+
+//            String value = regexUtil.calculateDefaultValueFromSetter(setterName);
         return "";
     }
 

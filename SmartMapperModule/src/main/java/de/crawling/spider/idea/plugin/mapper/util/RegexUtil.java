@@ -35,7 +35,7 @@ public class RegexUtil {
      * @param canonicalText
      * @return
      */
-    public String calculateVariableName(String canonicalText) {
+    public String calculateVariableNameFromClass(String canonicalText) {
         if(isBlank(canonicalText)){
             return "";
         }

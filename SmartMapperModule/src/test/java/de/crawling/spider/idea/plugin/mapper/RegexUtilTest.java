@@ -31,7 +31,7 @@ public class RegexUtilTest extends TestHelper{
     /**
      * public List<String> findAllMethodsWithIndex(String mapperMethodPrefix, String methodName, PsiClass editorClass)
      * public String calculateClassName(String canonicalText) {
-     * public String calculateVariableName(String canonicalText) {
+     * public String calculateVariableNameFromClass(String canonicalText) {
      */
 
     /**
@@ -47,15 +47,15 @@ public class RegexUtilTest extends TestHelper{
     }
 
     /**
-    * test calculateVariableName
+    * test calculateVariableNameFromClass
     *
     * @author sscheffler
     * @date 08.06.14
     */
     @Test
     public final void testCalculateVariableName() {
-        String toTestCanonical = regexUtil.calculateVariableName(CANONICAL_CLASS_TEXT);
-        String toTestNonCanonical = regexUtil.calculateVariableName("Bar");
+        String toTestCanonical = regexUtil.calculateVariableNameFromClass(CANONICAL_CLASS_TEXT);
+        String toTestNonCanonical = regexUtil.calculateVariableNameFromClass("Bar");
         String expected = "bar";
         assertEquals(expected, toTestCanonical);
         assertEquals(expected, toTestNonCanonical);
