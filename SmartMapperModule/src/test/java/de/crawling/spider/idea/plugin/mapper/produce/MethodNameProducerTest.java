@@ -54,7 +54,7 @@ public class MethodNameProducerTest extends TestHelper{
     }
 
     /**
-    * tests if the method neme will be generated correctly
+    * tests if the method name will be generated correctly
     *
     * @author sscheffler
     * @date 08.06.14
