@@ -153,11 +153,11 @@ public class DefaultSmartMapperImpl implements SmartMapper{
     private String calculateDefaultValueAppender(String setterName, PsiParameter psiParameter, PsiJavaCodeReferenceElement referenceElement, String appender) {
         if(null != referenceElement){
             String qualifiedClassName = referenceElement.getQualifiedName();
-            appender = defaultMethodParameterValueProducer.produceDefaultValue(qualifiedClassName, setterName);
+            appender = defaultMethodParameterValueProducer.produceDefaultValueForNonPrimitives(qualifiedClassName, setterName);
         }else{
             PsiKeyword keyWord = PsiTreeUtil.findChildOfType(psiParameter, PsiKeyword.class);
             if(null != keyWord){
-                appender = defaultMethodParameterValueProducer.produceDefaultValueFromKeyWord(keyWord.getText());
+                appender = defaultMethodParameterValueProducer.produceDefaultValueForPrimitives(keyWord.getText());
             }
         }
         return appender;

@@ -43,16 +43,25 @@ public class DefaultMethodParameterValueProducer {
 
     private String evaluatePrimitives(String name) {
 
-        switch (name){
-            case "java.lang.String":
-            default: return "";
+        DefaultTypes defaultType = DefaultTypes.fromValue(name);
+        if(null == defaultType){
+            return "";
         }
+
+        LOGGER.trace("defaultValue found [{}]", defaultType.getPrimName());
+        return defaultType.getDefaultValue();
 
     }
 
     private String evaluateNonPrimitives(final String name, String setterMethodName){
 
         //TODO: implement more cases / recursive constructor filling [sscheffler(stefan-scheffler@web.de) - 09.06.14 - 07:56]
+        DefaultTypes defaultType = DefaultTypes.fromValue(name);
+        if(null != defaultType){
+            LOGGER.trace("defaultValue found [{}]", defaultType.getComplName());
+            return defaultType.getDefaultValue();
+        }
+
         switch (name){
             case "java.lang.String":
                 return "\"" + regexUtil.calculateDefaultValueFromSetter(setterMethodName) + "\"";
@@ -76,20 +85,20 @@ public class DefaultMethodParameterValueProducer {
 }
 
 enum DefaultTypes{
-    BOOLEAN("boolean", Boolean.class.getCanonicalName(), true),
-    CHAR("char", Character.class.getCanonicalName(),'a'),
-    BYTE("byte", Byte.class.getCanonicalName(), "b".getBytes()[0]),
-    SHORT("short", Short.class.getCanonicalName(), 1),
-    INTEGER("int", Integer.class.getCanonicalName(), 1),
-    LONG("long", Long.class.getCanonicalName(), 1L),
-    FLOAT("float", Float.class.getCanonicalName(), 1.0),
-    DOUBLE("double", Double.class.getCanonicalName(), 1.0);
+    BOOLEAN("boolean", Boolean.class.getCanonicalName(), "true"),
+    CHAR("char", Character.class.getCanonicalName(),"'a'"),
+    BYTE("byte", Byte.class.getCanonicalName(), "Byte.valueOf(\"98\")"),
+    SHORT("short", Short.class.getCanonicalName(), "Short.valueOf(\"0\")"),
+    INTEGER("int", Integer.class.getCanonicalName(), "1"),
+    LONG("long", Long.class.getCanonicalName(), "1L"),
+    FLOAT("float", Float.class.getCanonicalName(), "1.0f"),
+    DOUBLE("double", Double.class.getCanonicalName(), "1.0d");
 
     private final String primName;
     private final String complName;
-    private final Object defaultValue;
+    private final String defaultValue;
 
-    DefaultTypes(String primName, String complName, Object defaultValue) {
+    DefaultTypes(String primName, String complName, String defaultValue) {
         this.primName = primName;
         this.complName = complName;
         this.defaultValue = defaultValue;
@@ -103,11 +112,11 @@ enum DefaultTypes{
         return complName;
     }
 
-    public Object getDefaultValue() {
+    public String getDefaultValue() {
         return defaultValue;
     }
 
-    public DefaultTypes fromValue(String str){
+    public static DefaultTypes fromValue(String str){
         for(DefaultTypes type : DefaultTypes.values()){
             if(type.getPrimName().equals(str) || type.complName.equals(str)){
                 return type;
