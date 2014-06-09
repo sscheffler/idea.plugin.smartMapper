@@ -134,6 +134,7 @@ public class DefaultSmartMapperImpl implements SmartMapper{
     private String calculateDefaultValue(final String setterName, final MapperProperties mapperProperties, PsiParameterList parameterList) {
         if(!mapperProperties.isDefaultValues()){
             LOGGER.debug("No default value will be calculated:, default selection[{}]", mapperProperties.isDefaultValues());
+            return "";
         }
 
         final StringBuilder builder = new StringBuilder();

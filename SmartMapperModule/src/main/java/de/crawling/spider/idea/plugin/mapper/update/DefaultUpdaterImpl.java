@@ -11,6 +11,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.psi.impl.JavaCodeFragmentFactoryImpl;
+import de.crawling.spider.idea.plugin.mapper.model.MapperProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -116,11 +117,11 @@ public class DefaultUpdaterImpl implements Updater{
     }
 
     @Override
-    public void updateClassWithMethod(String methodString, PsiClass updateClass) {
+    public void updateClassWithMethod(final String methodString, final MapperProperties properties) {
 
         if(isNotBlank(methodString)) {
             LOGGER.debug("method string is not empty");
-            updateClassWithCreatingNewMethod(methodString, updateClass);
+            updateClassWithCreatingNewMethod(methodString, properties.getEditorClass());
         }
     }
 }
