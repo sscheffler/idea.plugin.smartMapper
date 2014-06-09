@@ -2,7 +2,15 @@ package de.crawling.spider.idea.plugin.mapper;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.JavaPsiFacade;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiTypeElement;
+import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.util.PsiTreeUtil;
 import de.crawling.spider.idea.plugin.mapper.gui.PluginMainDialog;
 import de.crawling.spider.idea.plugin.mapper.map.DefaultSmartMapperImpl;
 import de.crawling.spider.idea.plugin.mapper.map.SmartMapper;
@@ -15,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Created by sscheffler on 24.05.14.
@@ -36,13 +45,24 @@ public class SmartMapperEditorPopupAction extends AnAction {
             final Project project = e.getProject();
             PluginMainDialog dialog = new PluginMainDialog(project);
 
+
+            Editor editor = e.getData(PlatformDataKeys.EDITOR);
+            PsiClass editorClass = mapperHelper.retrieveEditorClass(e);
+            PsiClass getterClass = mapperHelper.retrieveGetterClass(project, editor, editorClass);
+
+            if(null!= getterClass){
+                dialog.setSelectedGetterClass(getterClass);
+                dialog.setGetterColor(Color.green);
+            }
+
+
             dialog.show();
             MapperProperties properties = dialog.buildResults();
 
             if(dialog.isOK() && properties.propertiesValid()){
                 LOGGER.debug("Mapper properties are valid. Method will be build");
 
-                properties.setEditorClass(mapperHelper.retrieveEditorClass(e));
+                properties.setEditorClass(editorClass);
                 updater = new DefaultUpdaterImpl(project);
                 String methodString = smartMapper.buildMapperMethod(properties);
                 LOGGER.debug("Method: {}", methodString);
@@ -54,6 +74,7 @@ public class SmartMapperEditorPopupAction extends AnAction {
             JOptionPane.showMessageDialog(null, ex.getMessage(), "No editor or wrong file open", JOptionPane.INFORMATION_MESSAGE);
         }
     }
+
 
 
 

@@ -3,7 +3,9 @@ package de.crawling.spider.idea.plugin.mapper.util;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import de.crawling.spider.idea.plugin.mapper.model.MapperProperties;
 import de.crawling.spider.idea.plugin.mapper.produce.MethodNameProducer;
@@ -46,5 +48,24 @@ public class MapperHelper {
         }
 
         return methodNameProducer.produceMethodName(mapperProperties);
+    }
+
+    public PsiClass retrieveGetterClass(Project project, Editor editor, PsiClass editorClass) {
+        PsiClass getterClass = null;
+        LOGGER.debug("Check if a getter can be found");
+        GlobalSearchScope scope = GlobalSearchScope.allScope(project);
+
+        int cursorPos = editor.getCaretModel().getOffset();
+        PsiElement element = editorClass.getContainingFile().findElementAt(cursorPos);
+
+        PsiTypeElement psiJavaCodeReferenceElement = PsiTreeUtil.getParentOfType(element, PsiTypeElement.class);
+        if(null != psiJavaCodeReferenceElement) {
+
+            String canonicalText = psiJavaCodeReferenceElement.getType().getCanonicalText();
+            String variableName = "";
+            getterClass = JavaPsiFacade.getInstance(project).findClass(canonicalText, scope);
+
+        }
+        return getterClass;
     }
 }

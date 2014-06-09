@@ -161,6 +161,7 @@ public class PluginMainDialog extends DialogWrapper {
     }
 
     public void setSelectedGetterClass(PsiClass psiClass){
+        
         this.selectedGetterPsiClass = psiClass;
     }
 
