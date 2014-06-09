@@ -1,6 +1,6 @@
 package de.crawling.spider.idea.plugin.mapper.produce;
 
-import de.crawling.spider.idea.plugin.mapper.model.DefaultTypes;
+import de.crawling.spider.idea.plugin.mapper.model.DefaultPrimitiveTypes;
 import de.crawling.spider.idea.plugin.mapper.util.RegexUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +43,7 @@ public class DefaultMethodParameterValueProducer {
 
     private String evaluatePrimitives(String name) {
 
-        DefaultTypes defaultType = DefaultTypes.fromValue(name);
+        DefaultPrimitiveTypes defaultType = DefaultPrimitiveTypes.fromValue(name);
         if(null == defaultType){
             return "";
         }
@@ -56,7 +56,7 @@ public class DefaultMethodParameterValueProducer {
     private String evaluateNonPrimitives(final String name, String setterMethodName){
 
         //TODO: implement more cases / recursive constructor filling [sscheffler(stefan-scheffler@web.de) - 09.06.14 - 07:56]
-        DefaultTypes defaultType = DefaultTypes.fromValue(name);
+        DefaultPrimitiveTypes defaultType = DefaultPrimitiveTypes.fromValue(name);
         if(null != defaultType){
             LOGGER.trace("defaultValue found [{}]", defaultType.getComplName());
             return defaultType.getDefaultValue();
