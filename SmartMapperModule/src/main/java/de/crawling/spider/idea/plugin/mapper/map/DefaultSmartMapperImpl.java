@@ -20,7 +20,6 @@ import static org.apache.commons.lang.StringUtils.*;
  */
 public class DefaultSmartMapperImpl implements SmartMapper{
 
-    public static final String MAPPER_METHOD_PREFIX = "mapTo";
     private RegexUtil regexUtil = RegexUtil.INSTANCE;
     private MapperHelper mapperHelper = MapperHelper.INSTANCE;
     private DefaultMethodParameterValueProducer defaultMethodParameterValueProducer = DefaultMethodParameterValueProducer.INSTANCE;

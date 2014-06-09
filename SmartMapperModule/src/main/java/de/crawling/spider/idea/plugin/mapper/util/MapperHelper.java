@@ -17,7 +17,6 @@ import java.util.List;
 public class MapperHelper {
 
     public final static MapperHelper INSTANCE = new MapperHelper();
-    private RegexUtil regexUtil = RegexUtil.INSTANCE;
     private MethodNameProducer methodNameProducer = MethodNameProducer.INSTANCE;
 
     protected MapperHelper(){
