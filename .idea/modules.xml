@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/SmartMapperModule/SmartMapperModule.iml" filepath="$PROJECT_DIR$/SmartMapperModule/SmartMapperModule.iml" />
-      <module fileurl="file://$PROJECT_DIR$/smartMapper.iml" filepath="$PROJECT_DIR$/smartMapper.iml" />
+      <module fileurl="file://$PROJECT_DIR$/idea.plugin.smartMapper.iml" filepath="$PROJECT_DIR$/idea.plugin.smartMapper.iml" />
     </modules>
   </component>
 </project>

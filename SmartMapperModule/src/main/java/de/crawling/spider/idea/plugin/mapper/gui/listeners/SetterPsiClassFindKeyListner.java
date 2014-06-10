@@ -54,6 +54,7 @@ public class SetterPsiClassFindKeyListner implements KeyListener {
     }
 
     private void performKeyHandling() {
+
         String fieldValue = trim(textField.getText());
         PsiClass psiClass = javaFacade.findClass(fieldValue, scope);
         if(null != psiClass){
@@ -67,6 +68,7 @@ public class SetterPsiClassFindKeyListner implements KeyListener {
                         sortedList.add(setterMethod);
                     }
                 }
+                methodModel.removeAll();
                 methodModel.add(sortedList);
             }
         }else{
