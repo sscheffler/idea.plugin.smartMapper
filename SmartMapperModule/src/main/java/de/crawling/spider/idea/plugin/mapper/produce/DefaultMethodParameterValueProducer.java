@@ -65,8 +65,8 @@ public class DefaultMethodParameterValueProducer {
         switch (name){
             case "java.lang.String":
                 return "\"" + regexUtil.calculateDefaultValueFromSetter(setterMethodName) + "\"";
-            case "java.lang.Boolean":
-                return "true";
+            case "java.util.Date":
+                return "new Date()";
 
             default: return "";//"new " +name+ "( )";
         }

@@ -62,7 +62,7 @@ public class SetterPsiClassFindKeyListner implements KeyListener {
             if (psiClass != pluginMainDialog.getSelectedSetterClass()) {
                 pluginMainDialog.setSelectedSetterClass(psiClass);
                 java.util.List<PsiMethod> sortedList = new SortedList<>(PsiMethodComparator.INSTANCE);
-                for (PsiMethod setterMethod : psiClass.getMethods()) {
+                for (PsiMethod setterMethod : psiClass.getAllMethods()) {
 
                     if (setterMethod.getName().startsWith("set")) {
                         sortedList.add(setterMethod);
