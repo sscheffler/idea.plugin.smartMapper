@@ -59,6 +59,8 @@ public class PluginMainDialog extends DialogWrapper {
         methodModel = new CollectionListModel<>();
 
         buildGuiElementStructure();
+        //TODO: make dynamic
+//        getContentPane().setSize(600,800);
         init();
     }
 
@@ -75,8 +77,7 @@ public class PluginMainDialog extends DialogWrapper {
         originalTextFieldBackGroundColor = setterTextField.getBackground();
         mainPanel = new JPanel(new BorderLayout());
 
-        //TODO: make dynamic
-        setSize(400,400);
+
 
         ToolbarDecorator decorator = ToolbarDecorator.createDecorator(methodList);
 

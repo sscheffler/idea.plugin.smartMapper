@@ -4,9 +4,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.util.containers.SortedList;
 import de.crawling.spider.idea.plugin.mapper.produce.DefaultMethodParameterValueProducer;
 import de.crawling.spider.idea.plugin.mapper.util.MapperHelper;
 import de.crawling.spider.idea.plugin.mapper.model.MapperProperties;
+import de.crawling.spider.idea.plugin.mapper.util.PsiMethodComparator;
 import de.crawling.spider.idea.plugin.mapper.util.RegexUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,6 +114,8 @@ public class DefaultSmartMapperImpl implements SmartMapper{
 
         builder.append("public " + setterClassName +" " + methodName+"(){\n");
         builder.append(setterClassName + " " + setterVarName + " = new " + setterClassName + "();\n");
+
+
 
         for (PsiMethod setterMethod : mapperProperties.getSelectedMethods()) {
             if(setterMethod.getName().startsWith("set")){

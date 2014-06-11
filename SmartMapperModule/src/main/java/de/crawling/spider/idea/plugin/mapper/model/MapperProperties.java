@@ -9,7 +9,11 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.util.containers.SortedList;
+import de.crawling.spider.idea.plugin.mapper.util.PsiMethodComparator;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,6 +29,7 @@ public class MapperProperties {
     private String getterCanonicalClassName;
     private String mapperMethodPrefix="mapTo";
 
+    private final static Logger LOGGER = LoggerFactory.getLogger(MapperProperties.class);
 
     private List<PsiMethod> selectedMethods;
     private Project project;
@@ -36,7 +41,7 @@ public class MapperProperties {
     public MapperProperties(String setterCanonicalClassName, String getterCanonicalClassName, List<PsiMethod> selectedMethods, Project project, boolean loadSuperClassMethods, boolean defaultValues) {
         this.setterCanonicalClassName = setterCanonicalClassName;
         this.getterCanonicalClassName = getterCanonicalClassName;
-        this.selectedMethods = selectedMethods;
+        setSelectedMethods(selectedMethods);
         this.project = project;
         this.loadSuperClassMethods = loadSuperClassMethods;
         this.defaultValues = defaultValues;
@@ -62,8 +67,15 @@ public class MapperProperties {
         return selectedMethods;
     }
 
+    /**
+     * sets the selected methods and sorts them by alphabet
+     * @param selectedMethods
+     */
     public void setSelectedMethods(List<PsiMethod> selectedMethods) {
-        this.selectedMethods = selectedMethods;
+        java.util.List<PsiMethod> sortedList = new SortedList<>(PsiMethodComparator.INSTANCE);
+        LOGGER.debug("sort items by alphabet");
+        sortedList.addAll(selectedMethods);
+        this.selectedMethods = sortedList;
     }
 
     public Project getProject() {
