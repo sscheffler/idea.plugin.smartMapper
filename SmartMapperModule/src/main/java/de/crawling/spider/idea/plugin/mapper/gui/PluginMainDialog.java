@@ -118,10 +118,10 @@ public class PluginMainDialog extends DialogWrapper {
 
     public java.util.List<PsiMethod> getSelectedSetterMethods(){
         java.util.List<PsiMethod> returnList = new ArrayList<>();
-        int[] indizes = methodList.getSelectedIndices();
-        if(0 != indizes.length){
+        int[] indices = methodList.getSelectedIndices();
+        if(0 != indices.length){
             //return selected elements
-            for(int index: indizes){
+            for(int index: indices){
                 try {
                     returnList.add(methodModel.getElementAt(index));
                 }catch (ArrayIndexOutOfBoundsException e){
