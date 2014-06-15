@@ -144,10 +144,17 @@ public class DefaultSmartMapperImpl implements SmartMapper{
         final StringBuilder builder = new StringBuilder();
 
         for(PsiParameter psiParameter : parameterList.getParameters()){
-            PsiElement[] children = psiParameter.getChildren();
-            PsiJavaCodeReferenceElement referenceElement = PsiTreeUtil.findChildOfType(psiParameter, PsiJavaCodeReferenceElement.class);
+            PsiTypeElement psiTypeElement = psiParameter.getTypeElement();
+
             String appender = "";
-            appender = calculateDefaultValueAppender(setterName, psiParameter, referenceElement, appender);
+            if(null == psiTypeElement){
+                LOGGER.debug("no psiType(directly) found for {}");
+                PsiJavaCodeReferenceElement referenceElement = PsiTreeUtil.findChildOfType(psiParameter, PsiJavaCodeReferenceElement.class);
+                appender = calculateDefaultValueAppender(setterName, psiParameter, referenceElement, appender);
+
+            }else{
+                appender = defaultMethodParameterValueProducer.produceDefaultValueForNonPrimitives(psiTypeElement.getText(), setterName);
+            }
 
             appendDefaultValue(parameterList, builder, psiParameter, appender);
         }
