@@ -29,6 +29,8 @@ public class DefaultMethodParameterValueProducer {
      * @return
      */
     public String produceDefaultValueForNonPrimitives(String qualifiedClassName, String setterMethodName) {
+
+        //TODO: refactor, because it can be work together wtih the primitive method [Stefan Scheffler(sscheffler@avantgarde-labs.de) - 15.06.14 - 11:53]
         String returnValue = "";
         try {
             Class parameterTypeClass = Class.forName(qualifiedClassName);
