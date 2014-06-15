@@ -32,12 +32,12 @@ public class DefaultMethodParameterValueProducer {
 
         //TODO: refactor, because it can be work together wtih the primitive method [Stefan Scheffler(sscheffler@avantgarde-labs.de) - 15.06.14 - 11:53]
         String returnValue = "";
-        try {
-            Class parameterTypeClass = Class.forName(qualifiedClassName);
-            returnValue = evaluateNonPrimitives(parameterTypeClass.getCanonicalName(), setterMethodName);
-        }catch(ClassNotFoundException cne){
-            LOGGER.error("Class [{}] was not found", qualifiedClassName);
-        }
+//        try {
+//            Class parameterTypeClass = Class.forName(qualifiedClassName);
+            returnValue = evaluateNonPrimitives(qualifiedClassName, setterMethodName);
+//        }catch(ClassNotFoundException cne){
+//            LOGGER.error("Class [{}] was not found", qualifiedClassName);
+//        }
 
         return returnValue;
     }

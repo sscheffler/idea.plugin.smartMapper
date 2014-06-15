@@ -15,6 +15,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 
+import java.util.Collections;
+
 import static org.apache.commons.lang.StringUtils.*;
 
 /**
@@ -72,6 +74,8 @@ public class DefaultSmartMapperImpl implements SmartMapper{
 
             }
         }
+
+
         builder.append("return "+setterVarName+";\n}");
 
         return builder.toString();
@@ -135,6 +139,12 @@ public class DefaultSmartMapperImpl implements SmartMapper{
 
     }
 
+    /**
+     * TODO: refactor (use a Strategy-Pattern)
+     *
+     * @author Stefan Scheffler(sscheffler@avantgarde-labs.de)
+     * @date 15.06.14
+     */
     private String calculateDefaultValue(final String setterName, final MapperProperties mapperProperties, PsiParameterList parameterList) {
         if(!mapperProperties.isDefaultValues()){
             LOGGER.debug("No default value will be calculated:, default selection[{}]", mapperProperties.isDefaultValues());
@@ -146,11 +156,35 @@ public class DefaultSmartMapperImpl implements SmartMapper{
         for(PsiParameter psiParameter : parameterList.getParameters()){
 
             PsiTypeElement psiTypeElement = psiParameter.getTypeElement();
-            String appender = defaultMethodParameterValueProducer.produceDefaultValueForNonPrimitives(psiTypeElement.getType().getCanonicalText(), setterName);
+            String canonicalType = psiTypeElement.getType().getCanonicalText();
+            String appender = defaultMethodParameterValueProducer.produceDefaultValueForNonPrimitives(canonicalType, setterName);
 
             if(isBlank(appender)){
                 PsiJavaCodeReferenceElement referenceElement = PsiTreeUtil.findChildOfType(psiParameter, PsiJavaCodeReferenceElement.class);
+                canonicalType = (null != referenceElement)?referenceElement.getQualifiedName():canonicalType;
+
                 appender = calculateDefaultValueAppender(setterName, psiParameter, referenceElement, appender);
+            }
+
+            if(isBlank(appender)){
+                appender = (null != psiTypeElement)?"new " + psiTypeElement.getText()+"()":"new " + canonicalType+"()";
+//                GlobalSearchScope scope = GlobalSearchScope.allScope(mapperProperties.getProject());
+//                PsiClass psiClass = JavaPsiFacade.getInstance(mapperProperties.getProject()).findClass(canonicalType, scope);
+//                if(null != psiTypeElement && null != psiClass){
+//                    if (0 != psiClass.getConstructors().length){
+//                        for(PsiMethod constructor : psiClass.getConstructors()){
+//                            if( 0 == constructor.getTypeParameters().length){
+//                                appender = tmpString;
+//                                break;
+//                            }
+//                        }
+//                    }else{
+//                        appender = tmpString;
+//                    }
+//                }
+
+
+
             }
 
             appendDefaultValue(parameterList, builder, psiParameter, appender);
