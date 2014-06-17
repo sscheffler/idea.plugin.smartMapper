@@ -11,11 +11,9 @@ import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBTextField;
-import de.crawling.spider.idea.plugin.mapper.model.DefaultPrimitiveTypes;
 import de.crawling.spider.idea.plugin.mapper.model.MapperProperties;
 import de.crawling.spider.idea.plugin.mapper.gui.listeners.GetterPsiClassFindKeyListner;
 import de.crawling.spider.idea.plugin.mapper.gui.listeners.SetterPsiClassFindKeyListner;
-import de.crawling.spider.idea.plugin.mapper.model.MappingResults;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +30,7 @@ public class PluginMainDialog extends DialogWrapper {
     private final static Logger LOGGER = LoggerFactory.getLogger(PluginMainDialog.class);
     public static final String TITLE = "Smart Mapper";
 
-    private CollectionListModel<PsiMethod> methodModel;
+    private CollectionListModel<PsiMethod> selectedMethodModel;
     private GlobalSearchScope scope;
     private JavaPsiFacade javaFacade;
     private PsiClass selectedSetterPsiClass;
@@ -56,7 +54,7 @@ public class PluginMainDialog extends DialogWrapper {
 
         scope = GlobalSearchScope.allScope(project);
         javaFacade = JavaPsiFacade.getInstance(project);
-        methodModel = new CollectionListModel<>();
+        selectedMethodModel = new CollectionListModel<>();
 
         buildGuiElementStructure();
         //TODO: make dynamic
@@ -68,7 +66,7 @@ public class PluginMainDialog extends DialogWrapper {
      * visualization
      */
     private void buildGuiElementStructure() {
-        methodList = new JBList(methodModel);
+        methodList = new JBList(selectedMethodModel);
         methodList.setCellRenderer(new DefaultPsiElementCellRenderer());
         setterTextField = new JBTextField();
         getterTextField = new JBTextField();
@@ -110,9 +108,15 @@ public class PluginMainDialog extends DialogWrapper {
 
     public void addKeyListenerToTextFields(){
 
-        setterTextField.addKeyListener(new SetterPsiClassFindKeyListner(this, setterTextField, methodModel, scope, javaFacade));
+        setterTextField.addKeyListener(new SetterPsiClassFindKeyListner(this, setterTextField, selectedMethodModel, scope, javaFacade));
         getterTextField.addKeyListener(new GetterPsiClassFindKeyListner(this, getterTextField, scope, javaFacade));
     }
+
+    public void replaceSelectedMethods(java.util.List<PsiMethod> psiMethods){
+        selectedMethodModel.removeAll();
+        selectedMethodModel.add(psiMethods);
+    }
+
 
 
 
@@ -123,7 +127,7 @@ public class PluginMainDialog extends DialogWrapper {
             //return selected elements
             for(int index: indices){
                 try {
-                    returnList.add(methodModel.getElementAt(index));
+                    returnList.add(selectedMethodModel.getElementAt(index));
                 }catch (ArrayIndexOutOfBoundsException e){
 
                 }
@@ -131,7 +135,7 @@ public class PluginMainDialog extends DialogWrapper {
             }
         }else{
             //return all elements
-            returnList = methodModel.getItems();
+            returnList = selectedMethodModel.getItems();
         }
 
         return returnList;

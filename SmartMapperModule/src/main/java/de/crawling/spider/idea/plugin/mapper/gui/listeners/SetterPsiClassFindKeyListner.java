@@ -8,12 +8,14 @@ import com.intellij.ui.CollectionListModel;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.containers.SortedList;
 import de.crawling.spider.idea.plugin.mapper.gui.PluginMainDialog;
+import de.crawling.spider.idea.plugin.mapper.produce.ProduceSetterMethodList;
 import de.crawling.spider.idea.plugin.mapper.util.PsiMethodComparator;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.*;
+import java.util.List;
 
 import static org.apache.commons.lang.StringUtils.trim;
 
@@ -61,15 +63,10 @@ public class SetterPsiClassFindKeyListner implements KeyListener {
             pluginMainDialog.setSetterColor(Color.GREEN);
             if (psiClass != pluginMainDialog.getSelectedSetterClass()) {
                 pluginMainDialog.setSelectedSetterClass(psiClass);
-                java.util.List<PsiMethod> sortedList = new SortedList<>(PsiMethodComparator.INSTANCE);
-                for (PsiMethod setterMethod : psiClass.getAllMethods()) {
 
-                    if (setterMethod.getName().startsWith("set")) {
-                        sortedList.add(setterMethod);
-                    }
-                }
-                methodModel.removeAll();
-                methodModel.add(sortedList);
+                ProduceSetterMethodList produceSetterMethodList = new ProduceSetterMethodList();
+                List<PsiMethod> psiMethods = produceSetterMethodList.produceSetterMethodLists(psiClass);
+                pluginMainDialog.replaceSelectedMethods(psiMethods);
             }
         }else{
             pluginMainDialog.setSetterColor(pluginMainDialog.getOriginalTextFieldBackGroundColor());

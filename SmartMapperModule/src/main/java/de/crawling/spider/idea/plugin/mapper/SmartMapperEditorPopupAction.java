@@ -5,15 +5,13 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.JavaPsiFacade;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiTypeElement;
+import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import de.crawling.spider.idea.plugin.mapper.gui.PluginMainDialog;
 import de.crawling.spider.idea.plugin.mapper.map.DefaultSmartMapperImpl;
 import de.crawling.spider.idea.plugin.mapper.map.SmartMapper;
+import de.crawling.spider.idea.plugin.mapper.produce.ProduceSetterMethodList;
 import de.crawling.spider.idea.plugin.mapper.update.DefaultUpdaterImpl;
 import de.crawling.spider.idea.plugin.mapper.update.Updater;
 import de.crawling.spider.idea.plugin.mapper.util.MapperHelper;
@@ -24,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.*;
 
 /**
  * Created by sscheffler on 24.05.14.
@@ -90,6 +89,10 @@ public class SmartMapperEditorPopupAction extends AnAction {
                 dialog.setSelectedSetterClass(setterClass);
                 dialog.setSetterTextFieldText(canonicalText);
                 dialog.setSetterColor(Color.green);
+
+                ProduceSetterMethodList produceSetterMethodList = new ProduceSetterMethodList();
+                java.util.List<PsiMethod> psiMethods = produceSetterMethodList.produceSetterMethodLists(setterClass);
+                dialog.replaceSelectedMethods(psiMethods);
             }
         }
     }
