@@ -170,6 +170,10 @@ public class PluginMainDialog extends DialogWrapper {
         this.getterTextField.setText(str);
     }
 
+    public void setSetterTextFieldText(String str){
+        this.setterTextField.setText(str);
+    }
+
     public PsiClass getSelectedGetterPsiClass(){
         return selectedGetterPsiClass;
     }
@@ -185,6 +189,8 @@ public class PluginMainDialog extends DialogWrapper {
     public void setGetterColor(Color color){
         getterTextField.setBackground(color);
     }
+
+
 
     /**
      * builds the mapper properties

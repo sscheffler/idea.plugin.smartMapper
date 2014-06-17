@@ -74,8 +74,8 @@ public class SmartMapperEditorPopupAction extends AnAction {
     }
 
     public void fillGetterTextField(Project project, Editor editor, PsiClass editorClass, PluginMainDialog dialog) {
-        PsiClass getterClass = null;
-        LOGGER.debug("Check if a getter can be found");
+        PsiClass setterClass = null;
+        LOGGER.debug("Check if a setter can be found");
         GlobalSearchScope scope = GlobalSearchScope.allScope(project);
 
         int cursorPos = editor.getCaretModel().getOffset();
@@ -85,11 +85,11 @@ public class SmartMapperEditorPopupAction extends AnAction {
         if(null != psiJavaCodeReferenceElement) {
 
             String canonicalText = psiJavaCodeReferenceElement.getType().getCanonicalText();
-            getterClass = JavaPsiFacade.getInstance(project).findClass(canonicalText, scope);
-            if(null!= getterClass){
-                dialog.setSelectedGetterClass(getterClass);
-                dialog.setGetterTextFieldText(canonicalText);
-                dialog.setGetterColor(Color.green);
+            setterClass = JavaPsiFacade.getInstance(project).findClass(canonicalText, scope);
+            if(null!= setterClass){
+                dialog.setSelectedSetterClass(setterClass);
+                dialog.setSetterTextFieldText(canonicalText);
+                dialog.setSetterColor(Color.green);
             }
         }
     }
