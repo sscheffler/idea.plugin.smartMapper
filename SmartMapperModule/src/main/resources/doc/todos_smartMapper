@@ -1,0 +1,11 @@
+method - auswahl
+default empty Constructor
+fill fields with default if no getter is found
+anstatt Methode über strings aufbauen, die PsiStruktur verwenden
+Interface detection
+Abstract Class detection
+nullsafeness for getter
+skalierung der ui
+Klassenvorschläge
+integration von spring
+integration von maven
