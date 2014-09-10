@@ -54,7 +54,7 @@ public class PluginMainDialog extends DialogWrapper {
 
         scope = GlobalSearchScope.allScope(project);
         javaFacade = JavaPsiFacade.getInstance(project);
-        selectedMethodModel = new CollectionListModel<>();
+        selectedMethodModel = new CollectionListModel<PsiMethod>();
 
         buildGuiElementStructure();
         //TODO: make dynamic
