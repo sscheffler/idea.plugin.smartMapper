@@ -10,8 +10,6 @@ import de.crawling.spider.idea.plugin.mapper.util.MapperHelper;
 import de.crawling.spider.idea.plugin.mapper.model.MapperProperties;
 import de.crawling.spider.idea.plugin.mapper.util.PsiMethodComparator;
 import de.crawling.spider.idea.plugin.mapper.util.RegexUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 
@@ -28,7 +26,6 @@ public class DefaultSmartMapperImpl implements SmartMapper{
     private MapperHelper mapperHelper = MapperHelper.INSTANCE;
     private DefaultMethodParameterValueProducer defaultMethodParameterValueProducer = DefaultMethodParameterValueProducer.INSTANCE;
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(DefaultSmartMapperImpl.class);
 
     /**
      * creates a method String and tries to map getter methods in setter methods
@@ -59,13 +56,12 @@ public class DefaultSmartMapperImpl implements SmartMapper{
 
         String methodName = mapperHelper.retrieveMethodName(mapperProperties);
 
-        builder.append("public " + setterClassName +" " +methodName+"("+ getterClassName + " " + getterVarName +"){\n");
-        builder.append(setterClassName + " " + setterVarName + " = new " + setterClassName + "();\n");
+        builder.append("private " + setterClassName +" " +methodName+"("+ getterClassName + " " + getterVarName +"){\n");
+        builder.append("final " + setterClassName + " " + setterVarName + " = new " + setterClassName + "();\n");
 
         for (PsiMethod setterMethod : mapperProperties.getSelectedMethods()) {
             if(setterMethod.getName().startsWith("set")){
                 String setterName = setterMethod.getName();
-                LOGGER.trace("Building setter String for:{}", setterName);
                 String parameters = calculateGetter(getterClass,getterVarName, setterName, mapperProperties.isLoadSuperClassMethods());
 
                 parameters = (isNotBlank(parameters)) ? parameters : calculateDefaultValue(setterName, mapperProperties, setterMethod.getParameterList());
@@ -124,7 +120,6 @@ public class DefaultSmartMapperImpl implements SmartMapper{
         for (PsiMethod setterMethod : mapperProperties.getSelectedMethods()) {
             if(setterMethod.getName().startsWith("set")){
                 String setterName = setterMethod.getName();
-                LOGGER.debug("Building setter String for:{}", setterName);
 
                 String defaultValue = calculateDefaultValue(setterName, mapperProperties, setterMethod.getParameterList());
 
@@ -147,7 +142,6 @@ public class DefaultSmartMapperImpl implements SmartMapper{
      */
     private String calculateDefaultValue(final String setterName, final MapperProperties mapperProperties, PsiParameterList parameterList) {
         if(!mapperProperties.isDefaultValues()){
-            LOGGER.debug("No default value will be calculated:, default selection[{}]", mapperProperties.isDefaultValues());
             return "";
         }
 
@@ -248,11 +242,9 @@ public class DefaultSmartMapperImpl implements SmartMapper{
     public String buildMapperMethod(final MapperProperties properties) {
         String returnValue = "";
         if(properties.propertiesValidForGetter()){
-            LOGGER.debug("Mapping with getter methods was performed");
             returnValue =  getMappingMethodForSelecionWithGetterClass(properties);
 
         }else{
-            LOGGER.debug("just creating setterMethods");
             returnValue = getSimpleMappingMethodForSelecion(properties);
         }
 

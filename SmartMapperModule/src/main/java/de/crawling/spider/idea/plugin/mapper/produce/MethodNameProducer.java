@@ -3,8 +3,6 @@ package de.crawling.spider.idea.plugin.mapper.produce;
 import com.intellij.psi.PsiMethod;
 import de.crawling.spider.idea.plugin.mapper.model.MapperProperties;
 import de.crawling.spider.idea.plugin.mapper.util.RegexUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -13,7 +11,6 @@ import java.util.List;
  */
 public class MethodNameProducer {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(MethodNameProducer.class);
 
     public static MethodNameProducer INSTANCE = new MethodNameProducer();
 
@@ -26,21 +23,17 @@ public class MethodNameProducer {
 
         String methodName = regexUtil.calculateClassName(mapperProperties.getSetterCanonicalClassName());
         String result = mapperProperties.getMapperMethodPrefix()+methodName;
-        LOGGER.debug("Found method:{}", methodName);
 
         List<PsiMethod> relevantMethods = regexUtil.findAllMethodsWithIndex(
                 mapperProperties.getMapperMethodPrefix(),
                 methodName,
                 mapperProperties.getEditorClass()
         );
-        LOGGER.debug("Found relevant methods:{}", relevantMethods);
 
         if(!relevantMethods.isEmpty()){
             int newIndex = regexUtil.getIncrementIndex(relevantMethods);
-            LOGGER.debug("New index: {}", newIndex);
             result = result + newIndex;
         }
-        LOGGER.debug("MethodName: {}", result);
 
         return result;
     }

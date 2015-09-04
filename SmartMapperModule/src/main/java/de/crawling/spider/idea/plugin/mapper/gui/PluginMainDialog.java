@@ -15,8 +15,6 @@ import de.crawling.spider.idea.plugin.mapper.model.MapperProperties;
 import de.crawling.spider.idea.plugin.mapper.gui.listeners.GetterPsiClassFindKeyListner;
 import de.crawling.spider.idea.plugin.mapper.gui.listeners.SetterPsiClassFindKeyListner;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +25,6 @@ import java.util.*;
  */
 public class PluginMainDialog extends DialogWrapper {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(PluginMainDialog.class);
     public static final String TITLE = "Smart Mapper";
 
     private CollectionListModel<PsiMethod> selectedMethodModel;

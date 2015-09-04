@@ -9,8 +9,6 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import de.crawling.spider.idea.plugin.mapper.model.MapperProperties;
 import de.crawling.spider.idea.plugin.mapper.produce.MethodNameProducer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Created by sscheffler on 08.06.14.
@@ -24,8 +22,6 @@ public class MapperHelper {
 
     }
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(MapperHelper.class);
-
     public PsiClass retrieveEditorClass(AnActionEvent e) throws IllegalArgumentException{
         PsiFile psiFile = e.getData(LangDataKeys.PSI_FILE);
         if(psiFile instanceof PsiJavaFile){
@@ -35,7 +31,6 @@ public class MapperHelper {
             PsiElement psiElement = psiFile.findElementAt(cursorPostion);
             PsiClass returnValue = PsiTreeUtil.getParentOfType(psiElement, PsiClass.class);
 
-            LOGGER.debug("found editorclass: {}", returnValue);
             return returnValue;
         }else{
             throw new IllegalArgumentException("selected file '"+psiFile.getName()+"' is no java file!");

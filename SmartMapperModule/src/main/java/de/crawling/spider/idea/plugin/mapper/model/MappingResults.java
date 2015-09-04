@@ -1,7 +1,5 @@
 package de.crawling.spider.idea.plugin.mapper.model;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * TODO: really needed?
@@ -11,7 +9,6 @@ import org.slf4j.LoggerFactory;
  */
 public class MappingResults {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(MappingResults.class);
     public final static MappingResults INSTANCE = new MappingResults();
 
     private MappingResults() {

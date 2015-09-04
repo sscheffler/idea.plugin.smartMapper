@@ -1,8 +1,6 @@
 package de.crawling.spider.idea.plugin.mapper.produce;
 
 import de.crawling.spider.idea.plugin.mapper.model.MapperProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * TODO: implement me
@@ -12,7 +10,6 @@ import org.slf4j.LoggerFactory;
  */
 public class CommentProducer {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(CommentProducer.class);
     public final static CommentProducer INSTANCE = new CommentProducer();
 
     private CommentProducer() {

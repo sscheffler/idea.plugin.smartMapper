@@ -12,8 +12,6 @@ import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.psi.impl.JavaCodeFragmentFactoryImpl;
 import de.crawling.spider.idea.plugin.mapper.model.MapperProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 
@@ -23,7 +21,6 @@ import static org.apache.commons.lang.StringUtils.isNotBlank;
 public class DefaultUpdaterImpl implements Updater{
 
     private Project project;
-    private final static Logger LOGGER = LoggerFactory.getLogger(DefaultUpdaterImpl.class);
     public DefaultUpdaterImpl(Project project) {
         this.project = project;
     }
@@ -92,35 +89,23 @@ public class DefaultUpdaterImpl implements Updater{
      */
     private void updateClassWithCreatingNewMethod(final String methodString, final PsiClass psiClass){
 
-        LOGGER.debug("performing update");
         WriteCommandAction action = new WriteCommandAction.Simple(psiClass.getProject(), psiClass.getContainingFile()){
 
             @Override
             protected void run() throws Throwable {
-
-                LOGGER.debug("Updating method: psiClass[{}]", psiClass);
                 PsiElementFactory factory = JavaPsiFacade.getElementFactory(psiClass.getProject());
-                LOGGER.debug("Factory: {}", factory);
                 PsiMethod map = factory.createMethodFromText(methodString, psiClass);
-                LOGGER.debug("Map: {}", map);
                 PsiElement method = psiClass.add(map);
-                LOGGER.debug("Method: {}", method.getText());
                 JavaCodeStyleManager.getInstance(psiClass.getProject()).shortenClassReferences(method);
 
             }
         };
-
-        LOGGER.debug("built action: {}", action);
         action.execute();
-        LOGGER.debug("action executed", action);
-
     }
 
     @Override
     public void updateClassWithMethod(final String methodString, final MapperProperties properties) {
-
         if(isNotBlank(methodString)) {
-            LOGGER.debug("method string is not empty");
             updateClassWithCreatingNewMethod(methodString, properties.getEditorClass());
         }
     }

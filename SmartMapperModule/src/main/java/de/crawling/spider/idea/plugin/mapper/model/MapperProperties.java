@@ -12,8 +12,6 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.containers.SortedList;
 import de.crawling.spider.idea.plugin.mapper.util.PsiMethodComparator;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,8 +26,6 @@ public class MapperProperties {
     private String setterCanonicalClassName;
     private String getterCanonicalClassName;
     private String mapperMethodPrefix="mapTo";
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(MapperProperties.class);
 
     private List<PsiMethod> selectedMethods;
     private Project project;
@@ -73,7 +69,6 @@ public class MapperProperties {
      */
     public void setSelectedMethods(List<PsiMethod> selectedMethods) {
         java.util.List<PsiMethod> sortedList = new SortedList<>(PsiMethodComparator.INSTANCE);
-        LOGGER.debug("sort items by alphabet");
         sortedList.addAll(selectedMethods);
         this.selectedMethods = sortedList;
     }

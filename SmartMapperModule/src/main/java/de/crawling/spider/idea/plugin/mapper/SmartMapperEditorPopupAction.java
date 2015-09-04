@@ -17,8 +17,6 @@ import de.crawling.spider.idea.plugin.mapper.update.Updater;
 import de.crawling.spider.idea.plugin.mapper.util.MapperHelper;
 import de.crawling.spider.idea.plugin.mapper.model.MapperProperties;
 import org.apache.log4j.PropertyConfigurator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +27,6 @@ import java.util.*;
  */
 public class SmartMapperEditorPopupAction extends AnAction {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(SmartMapperEditorPopupAction.class);
     private Updater updater;
     private SmartMapper smartMapper = new DefaultSmartMapperImpl();
     private MapperHelper mapperHelper = MapperHelper.INSTANCE;
@@ -57,12 +54,10 @@ public class SmartMapperEditorPopupAction extends AnAction {
             MapperProperties properties = dialog.buildResults();
 
             if(dialog.isOK() && properties.propertiesValid()){
-                LOGGER.debug("Mapper properties are valid. Method will be build");
 
                 properties.setEditorClass(editorClass);
                 updater = new DefaultUpdaterImpl(project);
                 String methodString = smartMapper.buildMapperMethod(properties);
-                LOGGER.debug("Method: {}", methodString);
 
                 updater.updateClassWithMethod(methodString, properties);
             }
@@ -74,7 +69,6 @@ public class SmartMapperEditorPopupAction extends AnAction {
 
     public void fillGetterTextField(Project project, Editor editor, PsiClass editorClass, PluginMainDialog dialog) {
         PsiClass setterClass = null;
-        LOGGER.debug("Check if a setter can be found");
         GlobalSearchScope scope = GlobalSearchScope.allScope(project);
 
         int cursorPos = editor.getCaretModel().getOffset();

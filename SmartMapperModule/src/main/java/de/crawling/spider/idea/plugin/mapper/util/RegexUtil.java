@@ -4,8 +4,6 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
 import com.intellij.util.containers.SortedList;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +22,6 @@ public class RegexUtil {
     public static final String EXTRACT_CLASS_NAME_PATTERN = ".*\\.([^\\.]*)$";
 
     public static final RegexUtil INSTANCE = new RegexUtil();
-    private final static Logger LOGGER = LoggerFactory.getLogger(RegexUtil.class);
     public static final String EXTRACT_METHOD_INDEX_PATTERN = "^[^\\d]*(\\d*)";
     public static final String EXTRACT_SETTER_QUALIFIED_NAME_PATTERN = "^set(.*)";
 
@@ -83,9 +80,6 @@ public class RegexUtil {
 
         List<PsiMethod> relevantMethods = new ArrayList<>();
         for(PsiMethod method : editorClass.getMethods()){
-
-            LOGGER.trace("check if method name matches to '{}' + '{}'",prefix, methodName);
-
             if(method.getName().matches( "^" + prefix + methodName + "\\d*$" )){
                 relevantMethods.add(method);
             }
