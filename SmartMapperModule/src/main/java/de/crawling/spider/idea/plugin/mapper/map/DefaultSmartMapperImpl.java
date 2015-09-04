@@ -112,8 +112,8 @@ public class DefaultSmartMapperImpl implements SmartMapper{
 
         String methodName = mapperHelper.retrieveMethodName(mapperProperties);
 
-        builder.append("public " + setterClassName +" " + methodName+"(){\n");
-        builder.append(setterClassName + " " + setterVarName + " = new " + setterClassName + "();\n");
+        builder.append("private " + setterClassName +" " + methodName+"(){\n");
+        builder.append("final " + setterClassName + " " + setterVarName + " = new " + setterClassName + "();\n");
 
 
 
