@@ -52,7 +52,7 @@ public class RegexUtil {
 
 
     /**
-     * gets the classname by a caconcial String('e.g.: com.foo.Bar' = 'Bar')
+     * gets the classname by a canonical String('e.g.: com.foo.Bar' = 'Bar')
      * @param canonicalText
      * @return
      */
